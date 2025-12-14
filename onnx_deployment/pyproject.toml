@@ -1,0 +1,12 @@
+[project]
+name = "gemma-ollama"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.124.*",
+    "onnx>=1.20.*",
+    "onnxruntime>=1.23.*",
+    "transformers>=4.57.*",
+    "uvicorn>=0.38.*",
+]

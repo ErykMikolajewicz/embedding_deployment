@@ -1,0 +1,19 @@
+FROM docker.io/ollama/ollama:latest
+
+ARG QUANTIZATION
+
+LABEL org.opencontainers.image.authors="Eryk Mikołajewicz <eryk.mikolajewicz@gmail.com>" \
+      org.opencontainers.image.version=1 \
+      org.opencontainers.image.description="Deployment of gemma 300m embedding model with ollama." \
+      org.opencontainers.image.source="https://github.com/ErykMikolajewicz/prawobiorca-backend" \
+      quantization=${QUANTIZATION} \
+      maintainer="Eryk Mikołajewicz"
+
+ENV OLLAMA_HOST=0.0.0.0:11434
+ENV OLLAMA_ORIGINS=*
+
+RUN ollama serve & \
+    sleep 10 && \
+    ollama pull embeddinggemma:300m${QUANTIZATION}
+
+EXPOSE 11434
