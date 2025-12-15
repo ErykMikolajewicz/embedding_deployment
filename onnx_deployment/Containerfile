@@ -15,12 +15,13 @@ RUN pip install --no-cache-dir uv
 
 COPY pyproject.toml pyproject.toml
 
-RUN uv sync --no-dev
+RUN uv sync --group onnx-build --no-cache
 
 COPY onnx_build.py onnx_build.py
 
 RUN ./.venv/bin/python onnx_build.py --quantization ${QUANTIZATION}
 
+RUN uv sync --no-cache
 
 FROM python:3.13-slim-trixie
 

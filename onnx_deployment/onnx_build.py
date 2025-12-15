@@ -35,6 +35,11 @@ def quantize_dynamically(weight_type: QuantType):
         op_types_to_quantize=["MatMul", "Gemm"]
     )
 
+    model_dir = Path(base_model_path.parent.name)
+    old_data = model_dir / "model.onnx_data"
+    old_data.unlink()
+
+
 def download_and_rename(model_type: str):
     model_path = download_model(model_type, '_')
 
