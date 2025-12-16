@@ -6,11 +6,12 @@ requires-python = ">=3.13"
 dependencies = [
     "fastapi==0.124.*",
     "onnxruntime>=1.23.*",
-    "transformers>=4.57.*",
-    "uvicorn>=0.38.*",
+    "uvicorn==0.38.*",
+    "tokenizers==0.22.*"
 ]
 
 [dependency-groups]
 onnx-build = [
     "onnx==1.20.*",
+    "transformers==4.57.*"
 ]

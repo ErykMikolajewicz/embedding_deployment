@@ -3,11 +3,14 @@ from functools import partial
 import argparse
 
 from huggingface_hub import hf_hub_download
-from onnxruntime.quantization import quantize_dynamic, QuantType
+from onnxruntime.quantization import quantize_dynamic, QuantType, preprocess
 from transformers import AutoTokenizer
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--quantization")
+parser.add_argument("--quantization",
+                    required=False,
+                    nargs="?",
+                    default=None)
 args = parser.parse_args()
 
 quantization = args.quantization
@@ -27,12 +30,12 @@ def download_model(model_type = '', prefix = '') -> Path:
 
 def quantize_dynamically(weight_type: QuantType):
     base_model_path = download_model()
+    preprocess.quant_pre_process(base_model_path, base_model_path)
 
     quantize_dynamic(
         model_input=base_model_path,
         model_output=base_model_path,
-        weight_type=weight_type,
-        op_types_to_quantize=["MatMul", "Gemm"]
+        weight_type=weight_type
     )
 
     model_dir = Path(base_model_path.parent.name)
@@ -48,8 +51,8 @@ def download_and_rename(model_type: str):
     main_model_file = model_dir / f"model_{model_type}.onnx"
     main_model_file.rename(model_dir / "model.onnx")
 
-    model_data_file = model_dir / f"model_{model_type}.onnx_data"
-    main_model_file.rename(model_data_file / "model.onnx_data")
+    # model_data_file = model_dir / f"model_{model_type}.onnx_data"
+    # model_data_file.rename(model_dir / "model.onnx_data")
 
 if quantization:
     match quantization:
