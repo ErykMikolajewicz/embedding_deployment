@@ -21,7 +21,7 @@ resp = requests.post(url_ollama, json=payload, timeout=60)
 data = resp.json()
 embeddings_llama = data.get("embeddings")
 
-resp = requests.post(url_ollama, json=payload, timeout=60)
+resp = requests.post(url_onnx, json=payload, timeout=60)
 
 data = resp.json()
 
@@ -42,3 +42,8 @@ def cosine_similarity(a, b):
 
 
 cosine_similarity(embeddings_llama, embeddings_onnx)
+
+
+# 0.9316854632560686
+# 0.9278656523869553
+# 0.9318535895996084
