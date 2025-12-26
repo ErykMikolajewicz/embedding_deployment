@@ -1,20 +1,15 @@
-from typing import Optional
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.domain.enums import QuantizationType, DeploymentOption
+from src.infrastructure.enums import DecoderType
 
-APPLICATION_SETTINGS_FILE_PATH = Path(".env")
+ENV_FILE = Path(".env")
+
+class Settings(BaseSettings):
+    DECODER_TYPE: DecoderType = ...
+
+    model_config = SettingsConfigDict(env_file=ENV_FILE, case_sensitive=True, frozen=True)
 
 
-class DeploymentSettings(BaseSettings):
-    DEPLOYMENT_OPTION: DeploymentOption = ...
-
-    QUANTIZATION: Optional[QuantizationType] = None
-
-    model_config = SettingsConfigDict(
-        env_file=APPLICATION_SETTINGS_FILE_PATH, env_file_encoding="utf-8", case_sensitive=True, frozen=True
-    )
-
-deployment_settings = DeploymentSettings()
+settings = Settings()

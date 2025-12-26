@@ -4,7 +4,7 @@ ARG QUANTIZATION
 
 LABEL org.opencontainers.image.authors="Eryk Mikołajewicz <eryk.mikolajewicz@gmail.com>" \
       org.opencontainers.image.version=1 \
-      org.opencontainers.image.description="Deployment of gemma 300m embedding model with onnx." \
+      org.opencontainers.image.description="Deployment of gemma 300m embedding model with sentence-transfomers." \
       org.opencontainers.image.source="https://github.com/ErykMikolajewicz/prawobiorca-backend" \
       quantization=${QUANTIZATION} \
       maintainer="Eryk Mikołajewicz"
@@ -17,11 +17,6 @@ COPY pyproject.toml pyproject.toml
 
 RUN uv sync --group onnx-build --no-cache
 
-COPY onnx_build.py onnx_build.py
-
-RUN ./.venv/bin/python onnx_build.py --quantization ${QUANTIZATION}
-
-RUN uv sync --no-cache
 
 FROM python:3.13-slim-trixie
 
@@ -31,7 +26,6 @@ USER embedding_generator
 
 WORKDIR /embedding_deployment
 
-COPY --from=builder /embedding_deployment/onnx onnx
 COPY --from=builder /embedding_deployment/.venv .venv
 
 COPY src src

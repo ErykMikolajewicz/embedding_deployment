@@ -14,7 +14,6 @@ tokenizer.enable_padding(
 
 def encode(texts: list[str]) -> list[list[float]]:
 
-
     encodings = tokenizer.encode_batch(texts)
     input_ids = np.array([e.ids for e in encodings], dtype=np.int64)
     attention_mask = np.array([e.attention_mask for e in encodings], dtype=np.int64)

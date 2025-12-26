@@ -1,0 +1,40 @@
+FROM python:3.13-slim-trixie AS builder
+
+ARG QUANTIZATION
+
+LABEL quantization=${QUANTIZATION}
+
+WORKDIR /embedding_deployment
+
+RUN pip install --no-cache-dir uv
+
+COPY building/onnx/pyproject.toml pyproject.toml
+
+RUN uv sync --group onnx-build --no-cache
+
+COPY building/onnx/onnx_build.py onnx_build.py
+
+RUN .venv/bin/python onnx_build.py --quantization ${QUANTIZATION}
+
+RUN uv sync --no-cache
+
+FROM python:3.13-slim-trixie
+
+RUN useradd -r embedding_generator
+
+USER embedding_generator
+
+WORKDIR /embedding_deployment
+
+COPY --from=builder /embedding_deployment/onnx onnx
+COPY --from=builder /embedding_deployment/.venv .venv
+
+COPY src src
+
+EXPOSE 8000
+
+ENV PATH="/embedding_deployment/.venv/bin:$PATH"
+
+ENV DECODER_TYPE=ONNX
+
+ENTRYPOINT ["uvicorn", "--port", "8000", "--host", "0.0.0.0", "src.main:app"]

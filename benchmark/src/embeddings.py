@@ -1,6 +1,6 @@
 import requests
 
-from src.settings import benchmark_settings
+from deployment.src.settings import benchmark_settings
 
 OLLAMA_HOST = benchmark_settings.HOST
 MODEL_NAME = f"embeddinggemma:300m{benchmark_settings.QUANTIZATION}"

@@ -51,8 +51,6 @@ def download_and_rename(model_type: str):
     main_model_file = model_dir / f"model_{model_type}.onnx"
     main_model_file.rename(model_dir / "model.onnx")
 
-    # model_data_file = model_dir / f"model_{model_type}.onnx_data"
-    # model_data_file.rename(model_dir / "model.onnx_data")
 
 if quantization:
     match quantization:

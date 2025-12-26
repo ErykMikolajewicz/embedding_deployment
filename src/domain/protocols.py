@@ -1,10 +1,4 @@
-from typing import Protocol, Optional
+from collections.abc import Callable
 
-from src.domain.enums import QuantizationType
 
-class ImageBuilder(Protocol):
-    __quantization_mapper: dict[QuantizationType, str]
-
-    @classmethod
-    def build_image(cls, quantization: Optional[QuantizationType]) -> None:
-        ...
+TextsEncoder = Callable[[list[str]], list[list[float]]]

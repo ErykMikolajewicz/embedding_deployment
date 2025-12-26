@@ -1,8 +1,8 @@
 from typing import Optional
 import subprocess
 
-from src.domain.enums import QuantizationType, DeploymentOption
-from src.domain.protocols import ImageBuilder
+from deployment.src.domain.enums import QuantizationType, DeploymentOption
+from deployment.src.domain.protocols import ImageBuilder
 
 
 class OnnxImageBuilder:

@@ -4,15 +4,15 @@ from testcontainers.core.wait_strategies import HttpWaitStrategy
 import pytest
 import httpx
 
-OLLAMA_PORT = 11434
+from test.consts import OLLAMA_PORT
 
 # Model is always quantized, default embeddinggemma:300m is -bf16
 @pytest.mark.parametrize('quantization', ['-bf16', '-qat-q8_0', '-qat-q4_0'])
-def test_build_ollama(quantization, sentences):
+def test_ollama_embedding(quantization, sentences):
     wait_strategy = HttpWaitStrategy(OLLAMA_PORT, '/api/tags').with_method('GET')
     with DockerImage(path="building/ollama",
                      dockerfile_path='Containerfile',
-                     tag="ollama_container:test",
+                     tag="ollama_embedding:test",
                      buildargs = {"QUANTIZATION": quantization}
                      ) as image:
         with DockerContainer(str(image)).with_exposed_ports(OLLAMA_PORT) as ollama_container:
