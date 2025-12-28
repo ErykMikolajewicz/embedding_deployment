@@ -7,7 +7,7 @@ import httpx
 from consts import ONNX_PORT
 
 # Model is always quantized, default is fp16
-@pytest.mark.parametrize('quantization', ['fp16', 'int8']) # 'int4' currently not working
+@pytest.mark.parametrize('quantization', ['fp16', 'int8', 'int4'])
 def test_build_onnx(quantization, sentences):
     wait_strategy = HttpWaitStrategy(ONNX_PORT, '/health').with_method('GET')
     with DockerImage(path=".",

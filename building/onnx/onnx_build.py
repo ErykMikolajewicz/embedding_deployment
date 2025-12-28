@@ -55,6 +55,7 @@ def download_and_rename(model_type: str):
 if quantization:
     match quantization:
         case 'int4':
+            quantization = 'q4'
             download_and_rename(quantization)
         case 'int8':
             quantize_dynamically(QuantType.QInt8)

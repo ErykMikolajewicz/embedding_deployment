@@ -8,7 +8,7 @@ WORKDIR /embedding_deployment
 
 RUN pip install --no-cache-dir uv
 
-COPY building/onnx/pyproject.toml pyproject.toml
+COPY pyproject.toml pyproject.toml
 
 RUN uv sync --group onnx-build --no-cache
 
@@ -16,7 +16,7 @@ COPY building/onnx/onnx_build.py onnx_build.py
 
 RUN .venv/bin/python onnx_build.py --quantization ${QUANTIZATION}
 
-RUN uv sync --no-cache
+RUN uv sync --group onnx-runtime --no-cache
 
 FROM python:3.13-slim-trixie
 
