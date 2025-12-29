@@ -1,13 +1,11 @@
 import uvicorn
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI
 
-from src.framework.models import Texts, Embeddings
-from src.framework.dependencies import get_texts_encoder
 from src.domain.protocols import TextsEncoder
+from src.framework.dependencies import get_texts_encoder
+from src.framework.models import Embeddings, Texts
 
-app = FastAPI(
-    title="EmbeddingGemma Service"
-)
+app = FastAPI(title="EmbeddingGemma Service")
 
 
 @app.post("/api/embed", response_model=Embeddings)
@@ -16,6 +14,7 @@ def embed(texts: Texts, texts_encoder: TextsEncoder = Depends(get_texts_encoder)
     embeddings = texts_encoder(texts)
     embeddings = Embeddings.model_validate(embeddings)
     return embeddings
+
 
 @app.get("/health", tags=["health"])
 def health_check():

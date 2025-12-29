@@ -1,5 +1,6 @@
 from pydantic import RootModel
 
+
 class Texts(RootModel[list[str]]):
     pass
 
