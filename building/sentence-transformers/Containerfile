@@ -4,6 +4,8 @@ ARG QUANTIZATION
 
 LABEL quantization=${QUANTIZATION}
 
+RUN useradd -r embedding_generator
+
 WORKDIR /embedding_deployment
 
 RUN pip install --no-cache-dir uv
@@ -12,14 +14,11 @@ COPY pyproject.toml pyproject.toml
 
 RUN uv sync --group sentence-transformers --no-cache
 
-# RUN useradd -r embedding_generator
-
-# RUN chown -R embedding_generator:embedding_generator /embedding_deployment
-
-# USER embedding_generator
-
 COPY building/sentence-transformers/sentence_transformers_build.py sentence_transformers_build.py
 RUN --mount=type=secret,id=hf_token .venv/bin/python sentence_transformers_build.py
+
+RUN chown -R embedding_generator:embedding_generator /embedding_deployment
+USER embedding_generator
 
 COPY src src
 

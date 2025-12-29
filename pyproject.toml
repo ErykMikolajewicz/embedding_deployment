@@ -1,6 +1,6 @@
 [project]
 name = "embedding_deployment"
-version = "0.8.0"
+version = "0.8.1"
 description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
