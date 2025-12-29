@@ -1,25 +1,38 @@
+import pickle
+
 import pytest
 import numpy as np
 
-@pytest.fixture(scope="session")
-def sentences() -> tuple[str]:
-    return ("Ala ma kota.", "Primus inter pares.", "vtefwTFGIFOUEPJIebyorwqpg9f3hurp[[qf3")
-
+from test.consts import QUANTIZATION_SIMILARITY_THRESHOLD
 
 @pytest.fixture(scope="session")
-def cosine_similarity():
+def sentences() -> tuple[str, ...]:
+    return "Ala ma kota.", "Primus inter pares.", "vtefwTFGIFOUEPJIebyorwqpg9f3hurp[[qf3"
 
-    def _inner(a, b):
-        results = []
-        for v1, v2 in zip(a, b):
-            v1 = np.array(v1)
-            v2 = np.array(v2)
 
-            dot = np.dot(v1, v2)
-            norm_v1 = np.linalg.norm(v1)
-            norm_v2 = np.linalg.norm(v2)
-            result = dot / (norm_v1 * norm_v2)
-            results.append(result)
 
-        return results
+def cosine_similarity(vector: list[float], reference_vector: list[float]):
+    vector = np.array(vector)
+    reference_vector = np.array(reference_vector)
+
+    dot = np.dot(vector, reference_vector)
+    norm_vec = np.linalg.norm(vector)
+    norm_vec_ref = np.linalg.norm(reference_vector)
+    result = dot / (norm_vec * norm_vec_ref)
+
+    return result
+
+@pytest.fixture(scope='session')
+def measure_similarity(sentences):
+    with open('./test/data/reference_result.pickle', 'rb') as f:
+        reference_results = pickle.load(f)
+
+    def _inner(results: list[list[float]]):
+        for sentence, vector in zip(sentences, results):
+            reference_vector = reference_results[sentence]
+            similarity = cosine_similarity(vector, reference_vector)
+            print(round(similarity, 3))
+            assert similarity > QUANTIZATION_SIMILARITY_THRESHOLD,\
+                f"Not enough similar to reference ({similarity}), for sentence:\n{sentence}"
+
     return _inner

@@ -8,7 +8,7 @@ from test.consts import OLLAMA_PORT
 
 # Model is always quantized, default embeddinggemma:300m is -bf16
 @pytest.mark.parametrize('quantization', ['-bf16', '-qat-q8_0', '-qat-q4_0'])
-def test_ollama_embedding(quantization, sentences):
+def test_ollama_embedding(quantization, sentences, measure_similarity):
     wait_strategy = HttpWaitStrategy(OLLAMA_PORT, '/api/tags').with_method('GET')
     with DockerImage(path="building/ollama",
                      dockerfile_path='Containerfile',
@@ -29,4 +29,10 @@ def test_ollama_embedding(quantization, sentences):
             }
 
             response = httpx.post(url_ollama, json=payload, timeout=60)
-            assert response.status_code == 200, 'Invalid ollama embedding response!'
+            print(response.text)
+
+        assert response.status_code == 200, 'Invalid ollama embedding response!'
+
+        result = response.json()
+        vectors = result["embeddings"]
+        measure_similarity(vectors)
