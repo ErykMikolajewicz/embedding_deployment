@@ -2,12 +2,7 @@ FROM python:3.13-slim-trixie AS builder
 
 ARG QUANTIZATION
 
-LABEL org.opencontainers.image.authors="Eryk Mikołajewicz <eryk.mikolajewicz@gmail.com>" \
-      org.opencontainers.image.version=1 \
-      org.opencontainers.image.description="Deployment of gemma 300m embedding model with sentence-transfomers." \
-      org.opencontainers.image.source="https://github.com/ErykMikolajewicz/prawobiorca-backend" \
-      quantization=${QUANTIZATION} \
-      maintainer="Eryk Mikołajewicz"
+LABEL quantization=${QUANTIZATION}
 
 WORKDIR /embedding_deployment
 
@@ -15,23 +10,23 @@ RUN pip install --no-cache-dir uv
 
 COPY pyproject.toml pyproject.toml
 
-RUN uv sync --group onnx-build --no-cache
+RUN uv sync --group sentence-transformers --no-cache
 
+# RUN useradd -r embedding_generator
 
-FROM python:3.13-slim-trixie
+# RUN chown -R embedding_generator:embedding_generator /embedding_deployment
 
-RUN useradd -r embedding_generator
+# USER embedding_generator
 
-USER embedding_generator
-
-WORKDIR /embedding_deployment
-
-COPY --from=builder /embedding_deployment/.venv .venv
+COPY building/sentence-transformers/sentence_transformers_build.py sentence_transformers_build.py
+RUN --mount=type=secret,id=hf_token .venv/bin/python sentence_transformers_build.py
 
 COPY src src
 
 EXPOSE 8000
 
 ENV PATH="/embedding_deployment/.venv/bin:$PATH"
+
+ENV DECODER_TYPE=SENTENCE_TRANSFORMERS
 
 ENTRYPOINT ["uvicorn", "--port", "8000", "--host", "0.0.0.0", "src.main:app"]

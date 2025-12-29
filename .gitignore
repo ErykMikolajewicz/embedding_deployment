@@ -1,3 +1,4 @@
 /.env
 /building/onnx/.venv/
 /benchmark/.env
+/secrets/
