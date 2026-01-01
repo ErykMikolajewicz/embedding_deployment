@@ -2,8 +2,6 @@ FROM python:3.13-slim-trixie AS builder
 
 ARG QUANTIZATION
 
-LABEL quantization=${QUANTIZATION}
-
 WORKDIR /embedding_deployment
 
 RUN pip install --no-cache-dir uv
@@ -20,6 +18,14 @@ RUN uv sync --group onnx-runtime --no-cache
 
 FROM python:3.13-slim-trixie
 
+ARG QUANTIZATION
+
+LABEL quantization=${QUANTIZATION}
+
+ENV DECODER_TYPE=ONNX
+ENV ENVIRONMENT=CONTAINER
+ENV QUANTIZATION=${QUANTIZATION}
+
 RUN useradd -r embedding_generator
 
 USER embedding_generator
@@ -34,7 +40,5 @@ COPY src src
 EXPOSE 8000
 
 ENV PATH="/embedding_deployment/.venv/bin:$PATH"
-
-ENV DECODER_TYPE=ONNX
 
 ENTRYPOINT ["uvicorn", "--port", "8000", "--host", "0.0.0.0", "src.main:app"]

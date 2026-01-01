@@ -2,3 +2,4 @@
 /building/onnx/.venv/
 /benchmark/.env
 /secrets/
+/models/
