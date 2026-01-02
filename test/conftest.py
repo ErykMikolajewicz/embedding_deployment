@@ -1,5 +1,5 @@
 import pickle
-from test.consts import QUANTIZATION_SIMILARITY_THRESHOLD
+from consts import QUANTIZATION_SIMILARITY_THRESHOLD
 
 import numpy as np
 import pytest

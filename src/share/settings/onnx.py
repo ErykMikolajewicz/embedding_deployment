@@ -17,7 +17,7 @@ class QuantizationSettings(BaseSettings):
     QUANTIZATION: Optional[Quantization] = None
 
     model_config = SettingsConfigDict(
-        env_file=ENV_FILE, case_sensitive=True, frozen=True
+        env_file=ENV_FILE, case_sensitive=True, frozen=True, extra="ignore"
     )
 
 

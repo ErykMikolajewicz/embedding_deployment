@@ -2,12 +2,12 @@ import subprocess
 
 import httpx
 import pytest
-from consts import SENTENCE_TRANSFORMERS_PORT as ST_PORT
+from test.consts import SENTENCE_TRANSFORMERS_PORT as ST_PORT
 from testcontainers.core.container import DockerContainer
 from testcontainers.core.wait_strategies import HttpWaitStrategy
 
 
-@pytest.mark.parametrize("quantization", ["test"])
+@pytest.mark.parametrize("quantization", ["int8"])
 def test_build_st(quantization, sentences, measure_similarity):
     image_name = "sentence_transformers_embedding:test"
     building_command = [
@@ -16,7 +16,7 @@ def test_build_st(quantization, sentences, measure_similarity):
         "build",
         f"--tag={image_name}",
         "-f",
-        "./building/sentence-transformers/Containerfile",
+        "./building/sentence_transformers/Containerfile",
         "--secret",
         "id=hf_token,src=./secrets/hf_token.txt",
         ".",
@@ -39,7 +39,7 @@ def test_build_st(quantization, sentences, measure_similarity):
 
         response = httpx.post(url_st, json=sentences, timeout=60)
 
-    assert response.status_code == 200, "Invalid onnx embedding response!"
+    assert response.status_code == 200, "Invalid sentence-transformers embedding response!"
 
     results = response.json()
     measure_similarity(results)

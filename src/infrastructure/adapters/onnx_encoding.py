@@ -1,6 +1,7 @@
 import numpy as np
 import onnxruntime as ort
 from tokenizers import Tokenizer
+from collections.abc import Iterable
 
 from src.share.settings.app import Environment, app_settings
 from src.share.settings.onnx import Quantization, quantization_settings
@@ -31,11 +32,11 @@ model_path = f"{model_root}/onnx/model{quantization}.onnx"
 
 session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
 
-tokenizer = Tokenizer.from_file("/embedding_deployment/onnx/tokenizer/tokenizer.json")
+tokenizer = Tokenizer.from_file(f"{model_root}/onnx/tokenizer/tokenizer.json")
 tokenizer.enable_padding(length=None, pad_id=0)
 
 
-def encode(texts: list[str]) -> list[list[float]]:
+def encode(texts: Iterable[str]) -> list[list[float]]:
     encodings = tokenizer.encode_batch(texts)
     input_ids = np.array([e.ids for e in encodings], dtype=np.int64)
     attention_mask = np.array([e.attention_mask for e in encodings], dtype=np.int64)
