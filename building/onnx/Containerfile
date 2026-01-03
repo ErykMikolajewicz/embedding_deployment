@@ -10,9 +10,9 @@ COPY pyproject.toml pyproject.toml
 
 RUN uv sync --group onnx-build --no-cache
 
-COPY building/onnx/onnx_build.py onnx_build.py
+COPY building/onnx/model_download.py model_download.py
 
-RUN .venv/bin/python onnx_build.py --quantization ${QUANTIZATION}
+RUN .venv/bin/python model_download.py --quantization ${QUANTIZATION}
 
 RUN uv sync --group onnx-runtime --no-cache
 

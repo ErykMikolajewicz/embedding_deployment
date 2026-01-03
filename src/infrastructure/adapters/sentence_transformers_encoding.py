@@ -1,8 +1,12 @@
 from sentence_transformers import SentenceTransformer
 
-MODEL_ID_OR_PATH = "/embedding_deployment/models/embeddinggemma-300m"
+from src.infrastructure.utils.paths import get_model_root_path
 
-model = SentenceTransformer(MODEL_ID_OR_PATH, device="cpu")
+model_root = get_model_root_path()
+
+model_path = f"{model_root}/sentence_transformers/embeddinggemma-300m"
+
+model = SentenceTransformer(model_path, device="cpu")
 
 
 def encode(texts: list[str]) -> list[list[float]]:

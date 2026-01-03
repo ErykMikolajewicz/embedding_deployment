@@ -14,8 +14,8 @@ COPY pyproject.toml pyproject.toml
 
 RUN uv sync --group sentence-transformers --no-cache
 
-COPY building/sentence_transformers/sentence_transformers_build.py sentence_transformers_build.py
-RUN --mount=type=secret,id=hf_token .venv/bin/python sentence_transformers_build.py --quantization ${QUANTIZATION}
+COPY building/sentence_transformers/model_download.py model_download.py
+RUN --mount=type=secret,id=hf_token .venv/bin/python model_download.py --quantization ${QUANTIZATION}
 
 RUN chown -R embedding_generator:embedding_generator /embedding_deployment
 USER embedding_generator

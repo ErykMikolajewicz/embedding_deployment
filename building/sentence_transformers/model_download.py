@@ -2,9 +2,6 @@ import tempfile, shutil
 import os
 import argparse
 
-os.environ['HF_HOME']='/embedding_deployment/hf_home'
-os.environ['HF_HUB_CACHE']='/embedding_deployment/hf_home/hub'
-
 from huggingface_hub import snapshot_download
 from huggingface_hub import login
 from sentence_transformers import SentenceTransformer
@@ -12,11 +9,33 @@ from torch.ao.quantization import quantize_dynamic
 import torch
 import torch.nn as nn
 
-token = open('/run/secrets/hf_token').read().strip()
+parser = argparse.ArgumentParser()
+parser.add_argument("--quantization", required=False, nargs="?", default=None)
+parser.add_argument("--environment", required=False, nargs="?", default="container")
+args = parser.parse_args()
+
+environment = args.environment
+if environment == 'container':
+    os.environ['HF_HOME']='/embedding_deployment/hf_home'
+    os.environ['HF_HUB_CACHE']='/embedding_deployment/hf_home/hub'
+    with open('/run/secrets/hf_token', 'r') as f:
+        token = f.read().strip()
+else:
+    with open('./secrets/hf_token.txt', 'r') as f:
+        token = f.read().strip()
 login(token)
+
 repo_id = "google/embeddinggemma-300m"
 
-local_dir = "/embedding_deployment/models/embeddinggemma-300m"
+match environment:
+    case "container":
+        model_root_dir = "/embedding_deployment"
+    case "local_test":
+        model_root_dir = "./models"
+    case _:
+        raise Exception("Invalid environment!")
+
+local_dir = f"{model_root_dir}/sentence_transformers/embeddinggemma-300m"
 tmp_cache = tempfile.mkdtemp(prefix="hf_cache_")
 
 snapshot_download(
@@ -27,13 +46,6 @@ snapshot_download(
 )
 
 shutil.rmtree(tmp_cache)
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--quantization",
-                    required=False,
-                    nargs="?",
-                    default=None)
-args = parser.parse_args()
 
 quantization = args.quantization
 

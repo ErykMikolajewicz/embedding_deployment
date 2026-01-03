@@ -3,16 +3,10 @@ import onnxruntime as ort
 from tokenizers import Tokenizer
 from collections.abc import Iterable
 
-from src.share.settings.app import Environment, app_settings
 from src.share.settings.onnx import Quantization, quantization_settings
+from src.infrastructure.utils.paths import get_model_root_path
 
-match app_settings.ENVIRONMENT:
-    case Environment.CONTAINER:
-        model_root = "/embedding_deployment"
-    case Environment.LOCAL_TEST:
-        model_root = "./models"
-    case _:
-        raise Exception(f"Invalid environment option: {app_settings.ENVIRONMENT}")
+model_root = get_model_root_path()
 
 match quantization_settings.QUANTIZATION:
     case Quantization.INT4:
