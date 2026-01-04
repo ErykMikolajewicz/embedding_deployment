@@ -1,6 +1,6 @@
 [project]
 name = "embedding_deployment"
-version = "0.13.0"
+version = "0.13.1"
 description = "Add your description here"
 requires-python = "==3.13.*"
 dependencies = [
@@ -42,5 +42,7 @@ test = [
 
 [tool.pytest.ini_options]
 filterwarnings = [
-    "ignore:^The @wait_container_is_ready decorator:DeprecationWarning"
+    "ignore:^The @wait_container_is_ready decorator:DeprecationWarning",
+    "ignore:^Importing from torchao.dtypes:DeprecationWarning",
+    "ignore:^Importing BlockSparseLayout from torchao.dtypes:DeprecationWarning"
 ]

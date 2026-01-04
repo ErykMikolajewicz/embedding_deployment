@@ -8,9 +8,9 @@ model_root = get_model_root_path()
 
 match quantization_settings.QUANTIZATION:
     case Quantization.INT4:
-        quantization = "int4"
+        quantization = "_int4"
     case Quantization.INT8:
-        quantization = "int8"
+        quantization = "_int8"
     case None:
         quantization = ""
     case _:
