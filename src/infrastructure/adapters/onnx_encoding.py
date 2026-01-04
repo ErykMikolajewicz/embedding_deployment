@@ -3,7 +3,7 @@ import onnxruntime as ort
 from tokenizers import Tokenizer
 from collections.abc import Iterable
 
-from src.share.settings.onnx import Quantization, quantization_settings
+from src.share.settings.quantization import Quantization, quantization_settings
 from src.infrastructure.utils.paths import get_model_root_path
 
 model_root = get_model_root_path()
