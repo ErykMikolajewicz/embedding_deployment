@@ -7,7 +7,7 @@ from testcontainers.core.container import DockerContainer
 from testcontainers.core.wait_strategies import HttpWaitStrategy
 
 
-@pytest.mark.parametrize("quantization", ["int8"])
+@pytest.mark.parametrize("quantization", [None, "int8", 'int4'])
 def test_build_st(quantization, sentences, measure_similarity):
     image_name = "sentence_transformers_embedding:test"
     building_command = [

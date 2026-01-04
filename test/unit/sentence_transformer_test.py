@@ -3,7 +3,7 @@ import os
 import pytest
 
 
-@pytest.mark.parametrize("quantization", [None])
+@pytest.mark.parametrize("quantization", [None, 'int8', 'int4'])
 def test_sentence_transformers_encoding(quantization, sentences, measure_similarity):
     os.environ['APP_DECODER_TYPE'] = 'SENTENCE_TRANSFORMERS'
     os.environ['APP_ENVIRONMENT'] = 'LOCAL_TEST'

@@ -1,6 +1,6 @@
 [project]
 name = "embedding_deployment"
-version = "0.12.2"
+version = "0.13.0"
 description = "Add your description here"
 requires-python = "==3.13.*"
 dependencies = [
@@ -29,8 +29,9 @@ onnx-runtime = [
     "onnxruntime==1.23.*",
     "tokenizers==0.22.*",
 ]
-sentence-transformers = [
+sentence_transformers = [
     "sentence-transformers==5.2.*",
+    "torchao==0.15.*",
 ]
 
 test = [
