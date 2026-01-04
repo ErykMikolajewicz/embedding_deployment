@@ -18,7 +18,7 @@ class AppSettings(BaseSettings):
     ENVIRONMENT: Environment = ...
 
     model_config = SettingsConfigDict(
-        env_file=ENV_FILE, case_sensitive=True, frozen=True, env_prefix='APP_',  extra="ignore"
+        env_file=ENV_FILE, case_sensitive=True, frozen=True, env_prefix="APP_", extra="ignore"
     )
 
 

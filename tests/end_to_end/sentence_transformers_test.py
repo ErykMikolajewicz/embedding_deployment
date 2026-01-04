@@ -2,14 +2,15 @@ import subprocess
 
 import httpx
 import pytest
-from test.consts import SENTENCE_TRANSFORMERS_PORT as ST_PORT
 from testcontainers.core.container import DockerContainer
 from testcontainers.core.wait_strategies import HttpWaitStrategy
 
+from tests.consts import SENTENCE_TRANSFORMERS_PORT as ST_PORT
 
-@pytest.mark.parametrize("quantization", [None, "int8", 'int4'])
+
+@pytest.mark.parametrize("quantization", [None, "int8", "int4"])
 def test_build_st(quantization, sentences, measure_similarity):
-    image_name = "sentence_transformers_embedding:test"
+    image_name = "sentence_transformers_embedding:tests"
     building_command = [
         "podman",
         "image",
@@ -29,11 +30,7 @@ def test_build_st(quantization, sentences, measure_similarity):
     assert build_result.returncode == 0, "Building image failed"
 
     wait_strategy = HttpWaitStrategy(ST_PORT, "/health").with_method("GET")
-    with (
-        DockerContainer(image_name)
-        .with_exposed_ports(ST_PORT)
-        .waiting_for(wait_strategy) as st_container
-    ):
+    with DockerContainer(image_name).with_exposed_ports(ST_PORT).waiting_for(wait_strategy) as st_container:
         port = st_container.get_exposed_port(ST_PORT)
         url_st = f"http://localhost:{port}/api/embed"
 

@@ -10,9 +10,7 @@ def get_texts_encoder() -> TextsEncoder:
 
             return encode
         case DecoderType.SENTENCE_TRANSFORMERS:
-            from src.infrastructure.adapters.sentence_transformers_encoding import (
-                encode,
-            )
+            from src.infrastructure.adapters.sentence_transformers_encoding import encode
 
             return encode
         case _:

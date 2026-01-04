@@ -1,8 +1,8 @@
 import pickle
-from consts import QUANTIZATION_SIMILARITY_THRESHOLD
 
 import numpy as np
 import pytest
+from consts import QUANTIZATION_SIMILARITY_THRESHOLD
 
 
 @pytest.fixture(scope="session")
@@ -28,7 +28,7 @@ def cosine_similarity(vector: list[float], reference_vector: list[float]):
 
 @pytest.fixture(scope="session")
 def measure_similarity(sentences):
-    with open("./test/data/reference_result.pickle", "rb") as f:
+    with open("./tests/data/reference_result.pickle", "rb") as f:
         reference_results = pickle.load(f)
 
     def _inner(results: list[list[float]]):

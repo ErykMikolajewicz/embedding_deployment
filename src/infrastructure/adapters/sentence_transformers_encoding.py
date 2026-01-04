@@ -1,7 +1,6 @@
 from sentence_transformers import SentenceTransformer
 
 from src.infrastructure.utils.paths import get_model_root_path
-
 from src.share.settings.quantization import Quantization, quantization_settings
 
 model_root = get_model_root_path()
@@ -14,9 +13,7 @@ match quantization_settings.QUANTIZATION:
     case None:
         quantization = ""
     case _:
-        raise Exception(
-            f"Invalid quantization option {quantization_settings.QUANTIZATION}"
-        )
+        raise Exception(f"Invalid quantization option {quantization_settings.QUANTIZATION}")
 
 model_path = f"{model_root}/sentence_transformers/embeddinggemma-300m{quantization}"
 

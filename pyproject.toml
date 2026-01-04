@@ -1,7 +1,7 @@
 [project]
 name = "embedding_deployment"
 version = "0.13.1"
-description = "Add your description here"
+description = "Benchmark for various options of deploying embedding models."
 requires-python = "==3.13.*"
 dependencies = [
     "fastapi==0.128.*",
@@ -46,3 +46,7 @@ filterwarnings = [
     "ignore:^Importing from torchao.dtypes:DeprecationWarning",
     "ignore:^Importing BlockSparseLayout from torchao.dtypes:DeprecationWarning"
 ]
+
+[tool.black]
+line-length = 120
+target-version = ["py313"]

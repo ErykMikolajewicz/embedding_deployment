@@ -2,7 +2,7 @@ from src.share.settings.app import Environment, app_settings
 
 
 def get_model_root_path() -> str:
-    model_root = ''
+    model_root = ""
     match app_settings.ENVIRONMENT:
         case Environment.CONTAINER:
             model_root = "/embedding_deployment"

@@ -1,9 +1,10 @@
 import httpx
 import pytest
-from test.consts import ONNX_PORT
 from testcontainers.core.container import DockerContainer
 from testcontainers.core.image import DockerImage
 from testcontainers.core.wait_strategies import HttpWaitStrategy
+
+from tests.consts import ONNX_PORT
 
 
 # Model is always quantized, default is fp16
@@ -13,14 +14,10 @@ def test_build_onnx(quantization, sentences, measure_similarity):
     with DockerImage(
         path=".",
         dockerfile_path="building/onnx/Containerfile",
-        tag="onnx_embedding:test",
+        tag="onnx_embedding:tests",
         buildargs={"QUANTIZATION": quantization},
     ) as image:
-        with (
-            DockerContainer(str(image))
-            .with_exposed_ports(ONNX_PORT)
-            .waiting_for(wait_strategy) as onnx_container
-        ):
+        with DockerContainer(str(image)).with_exposed_ports(ONNX_PORT).waiting_for(wait_strategy) as onnx_container:
             port = onnx_container.get_exposed_port(ONNX_PORT)
             url_onnx = f"http://localhost:{port}/api/embed"
 
