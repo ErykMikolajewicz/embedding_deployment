@@ -43,12 +43,12 @@ def download_model(model_type="", prefix="") -> Path:
 
 def quantize_dynamically(weight_type: QuantType):
     base_model_path = download_model()
-    new_model_path = f"{model_root_dir}/onnx/model_{quantization}.onnx"
-    preprocess.quant_pre_process(base_model_path, new_model_path)
+    preprocess.quant_pre_process(base_model_path, base_model_path)
 
+    new_model_path = f"{model_root_dir}/onnx/model_{quantization}.onnx"
     quantize_dynamic(
         model_input=base_model_path,
-        model_output=base_model_path,
+        model_output=new_model_path,
         weight_type=weight_type,
     )
 
