@@ -1,11 +1,11 @@
 from unittest.mock import patch
 
-from src_bench.domain.services import get_benchmark_config
 from src_bench.domain.models import FrameworkBenchConfig
+from src_bench.domain.services.general import get_benchmark_config
 
 
 def test_read_config():
-    with patch('src_bench.domain.services.CONFIG_FILE_NAME', 'benchmark/config.json.example'):
+    with patch("src_bench.domain.services.CONFIG_FILE_NAME", "benchmark/config.json.example"):
         benchmark_config = get_benchmark_config()
 
     for framework_config in benchmark_config:
