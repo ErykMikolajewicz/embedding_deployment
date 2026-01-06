@@ -1,56 +1,56 @@
-# Embedding Model Deployment Experiments
+# Embedding Model Deployment Benchmark
 
-## Opis projektu
+## Project description
 
-Projekt powstał z potrzeby znalezienia bardziej efektywnego sposobu budowania obrazów kontenerów z modelami do generowania embeddingów. Dotychczasowe podejście oparte na **Hugging Face** oraz **sentence-transformers**, choć wygodne w użyciu, prowadziło do tworzenia obrazów o **nieakceptowalnie dużych rozmiarach** (rzędu 12 GB).
+The project was created out of the need to find a more efficient way to build container images with models for generating embeddings. The previous approach based on **Hugging Face** and **sentence-transformers**, although convenient to use, resulted in container images of **unacceptably large size** (around 12 GB).
 
-Główną przyczyną tego problemu była konieczność dołączania bibliotek do uczenia maszynowego, takich jak:
+The main cause of this issue was the necessity to include machine learning libraries such as:
 - PyTorch  
 - Triton
 
-## Cel projektu
+## Project Goal
 
-Celem projektu jest:
-- przetestowanie metod budowy obrazów kontenerów,
-- redukcja rozmiaru obrazów,
-- porównanie wydajności różnych środowisk i sposobów wdrożenia.
+The goal of the project is to:
+- test different methods of building container images,
+- reduce image size,
+- compare the performance of different environments and deployment approaches.
 
-## Wykorzystywany model
+## Model Used
 
-W ramach projektu wykorzystywany jest model embeddingowy **gemma300m**.
+As part of the project, the **gemma300m** embedding model is used.
 
-Model ten został wybrany ze względu na:
-- **uniwersalność** nie tylko semantic search, ale też np. clustering,
-- dobre wyniki w rankingach,
-- relatywnie **niewielki rozmiar**, który umożliwia sensowne wdrożenie na:
+This model was selected due to:
+- its **versatility**, not only for semantic search but also for tasks such as clustering,
+- good results in benchmarks,
+- a relatively **small size**, enabling reasonable deployment on:
   - CPU,
   - GPU.
 
-## Aktualny stan projektu
+## Current Project Status
 
-Obecnie przygotowane zostały:
-- skrypty do budowy obrazów kontenerów,
-- skrypty wdrażające model z użyciem CPU na:
+Currently prepared:
+- scripts for building container images,
+- scripts for deploying the model using CPU on:
   - **Ollama**,
   - **ONNX Runtime**,
+  - **sentence transformers**.
 
-### Kwantyzacja modeli
+### Model Quantization
 
-Proces budowy obrazów umożliwia wybór różnych wariantów kwantyzacji, m.in.:
+The image build process allows selecting different quantization variants, for example:
 - `int8`,
 - `fp16`.
+Available options depend strongly on used framework. 
 
-## Plany rozwoju
+## Development Plans
 
-W kolejnych etapach projektu planowane jest:
-- porównanie **wydajności różnych opcji wdrożeniowych** modeli embeddingowych,
-- testy dodatkowych środowisk, w tym:
-  - `sentence-transformers`,
+In the next stages of the project, the following are planned:
+- comparison of the **performance**, and **accuracy** of different deployment options for embedding model,
+- testing of additional environments, including:
   - `llama.cpp`,
-- przygotowanie skryptów umożliwiających:
-  - wdrożenie modeli na **GPU**
+- deployment of models on **GPU**.
 
-## Możliwe rozszerzenia
+## Possible Extensions
 
-Rozważane jest również rozszerzenie projektu o:
-- deployment w środowisku **Google Cloud Platform (GCP)**
+It is also being considered to extend the project with:
+- deployment in the **Google Cloud Platform (GCP)** environment
