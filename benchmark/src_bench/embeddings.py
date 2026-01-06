@@ -1,4 +1,4 @@
-import requests
+import httpx
 
 from deployment.src.settings import benchmark_settings
 
@@ -14,7 +14,7 @@ def get_embeddings(texts: list[str]) -> list[list[float]]:
         "input": texts,
     }
 
-    resp = requests.post(url, json=payload, timeout=60)
+    resp = httpx.post(url, json=payload, timeout=60)
 
     data = resp.json()
 

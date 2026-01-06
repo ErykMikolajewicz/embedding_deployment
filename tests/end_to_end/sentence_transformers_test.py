@@ -19,7 +19,7 @@ def test_build_st(quantization, sentences, measure_similarity):
         "-f",
         "./building/sentence_transformers/Containerfile",
         "--secret",
-        "id=hf_token,src=./secrets/hf_token.txt",
+        "id=hf_token,src_bench=./secrets/hf_token.txt",
         ".",
     ]
 

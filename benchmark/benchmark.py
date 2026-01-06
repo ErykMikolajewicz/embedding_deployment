@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from src.extraction import extract_articles, extract_text
-from src.measure import rest_test
+from src_bench.extraction import extract_articles, extract_text
+from src_bench.measure import rest_test
 
 act_id, act_name = 'U-2024-1-572', 'kodeks_administracyjny'
 
