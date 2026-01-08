@@ -1,8 +1,6 @@
 FROM python:3.13-slim-trixie AS builder
 
-ARG QUANTIZATION
-
-LABEL quantization=${QUANTIZATION}
+ENV APP_DECODER_TYPE=SENTENCE_TRANSFORMERS
 
 RUN useradd -r embedding_generator
 
@@ -15,7 +13,7 @@ COPY pyproject.toml pyproject.toml
 RUN uv sync --group sentence-transformers --no-cache
 
 COPY building/sentence_transformers/model_download.py model_download.py
-RUN --mount=type=secret,id=hf_token .venv/bin/python model_download.py --quantization ${QUANTIZATION}
+RUN --mount=type=secret,id=hf_token .venv/bin/python model_download.py
 
 RUN chown -R embedding_generator:embedding_generator /embedding_deployment
 USER embedding_generator
@@ -25,8 +23,5 @@ COPY src src
 EXPOSE 8000
 
 ENV PATH="/embedding_deployment/.venv/bin:$PATH"
-
-ENV APP_DECODER_TYPE=SENTENCE_TRANSFORMERS
-ENV APP_ENVIRONMENT=CONTAINER
 
 ENTRYPOINT ["uvicorn", "--port", "8000", "--host", "0.0.0.0", "src.main:app"]

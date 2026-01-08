@@ -69,6 +69,8 @@ if quantization:
             quantize_dynamically(QuantType.QInt8)
         case "fp16":
             download_model(quantization, "_")
+        case None:
+            download_model()
         case _:
             raise Exception("Not supported quantization type!")
 else:

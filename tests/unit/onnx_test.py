@@ -1,22 +1,16 @@
-import os
+from unittest.mock import patch
 
 import pytest
+
+from src.infrastructure.adapters.onnx_encoding import OnnxEncoder
 
 
 @pytest.mark.parametrize("quantization", [None, "fp16", "int8", "int4"])
 def test_onnx_encoding(quantization, sentences, measure_similarity):
-    os.environ["APP_DECODER_TYPE"] = "ONNX"
-    os.environ["APP_ENVIRONMENT"] = "LOCAL_TEST"
-    if quantization is not None:
-        os.environ["QUANTIZATION"] = quantization
-    else:
-        try:
-            del os.environ["QUANTIZATION"]
-        except KeyError:
-            pass
 
-    from src.infrastructure.adapters.onnx_encoding import encode
+    with patch('src.infrastructure.adapters.onnx_encoding.MODEL_ROOT', './models'):
+        onnx_encoder = OnnxEncoder(quantization)
 
-    vectors = encode(sentences)
+    vectors = onnx_encoder.encode(sentences)
 
     measure_similarity(vectors)

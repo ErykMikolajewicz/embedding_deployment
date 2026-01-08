@@ -1,0 +1,1 @@
+MODEL_ROOT = '/embedding_deployment'

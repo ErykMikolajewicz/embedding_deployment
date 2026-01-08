@@ -7,8 +7,7 @@ from testcontainers.core.wait_strategies import HttpWaitStrategy
 from tests.consts import ONNX_PORT
 
 
-# Model is always quantized, default is fp16
-@pytest.mark.parametrize("quantization", ["fp16", "int8", "int4"])
+@pytest.mark.parametrize("quantization", [None, "fp16", "int8", "int4"])
 def test_build_onnx(quantization, sentences, measure_similarity):
     wait_strategy = HttpWaitStrategy(ONNX_PORT, "/health").with_method("GET")
     with DockerImage(
@@ -17,7 +16,8 @@ def test_build_onnx(quantization, sentences, measure_similarity):
         tag="onnx_embedding:tests",
         buildargs={"QUANTIZATION": quantization},
     ) as image:
-        with DockerContainer(str(image)).with_exposed_ports(ONNX_PORT).waiting_for(wait_strategy) as onnx_container:
+        with (DockerContainer(str(image)).with_exposed_ports(ONNX_PORT).waiting_for(wait_strategy).
+                      with_env("QUANTIZATION", quantization)) as onnx_container:
             port = onnx_container.get_exposed_port(ONNX_PORT)
             url_onnx = f"http://localhost:{port}/api/embed"
 

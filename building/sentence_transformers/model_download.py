@@ -4,10 +4,8 @@ import argparse
 
 from huggingface_hub import snapshot_download
 from huggingface_hub import login
-from sentence_transformers import SentenceTransformer
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--quantization", required=False, nargs="?", default=None)
 parser.add_argument("--environment", required=False, nargs="?", default="container")
 args = parser.parse_args()
 
@@ -32,12 +30,7 @@ match environment:
     case _:
         raise Exception("Invalid environment!")
 
-
-quantization = args.quantization
-if quantization is None:
-    local_dir = f"{model_root_dir}/sentence_transformers/embeddinggemma-300m"
-else:
-    local_dir = tempfile.mkdtemp()
+local_dir = f"{model_root_dir}/sentence_transformers/embeddinggemma-300m"
 tmp_cache = tempfile.mkdtemp(prefix="hf_cache_")
 
 snapshot_download(
@@ -47,24 +40,3 @@ snapshot_download(
 )
 
 shutil.rmtree(tmp_cache)
-
-if quantization:
-    from torchao.quantization import (quantize_, Int4DynamicActivationInt4WeightConfig,
-                                      Int8DynamicActivationInt8WeightConfig)
-
-    match quantization:
-        case 'int4':
-            quantization_config = Int4DynamicActivationInt4WeightConfig()
-        case 'int8':
-            quantization_config = Int8DynamicActivationInt8WeightConfig()
-        case _:
-            raise Exception('Invalid quantization!')
-
-    model = SentenceTransformer(local_dir, device="cpu")
-
-    quantize_(model, quantization_config)
-
-    save_path = f"{model_root_dir}/sentence_transformers/embeddinggemma-300m_{quantization}"
-    model.save(save_path, safe_serialization=False)
-
-    shutil.rmtree(local_dir)

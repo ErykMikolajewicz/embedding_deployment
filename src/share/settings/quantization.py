@@ -1,16 +1,11 @@
-from enum import StrEnum
 from pathlib import Path
 from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from src.domain.quantization import Quantization
+
 ENV_FILE = Path(".env")
-
-
-class Quantization(StrEnum):
-    INT4 = "int4"
-    INT8 = "int8"
-    FP16 = "fp16"
 
 
 class QuantizationSettings(BaseSettings):

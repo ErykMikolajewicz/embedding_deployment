@@ -1,6 +1,6 @@
 [project]
 name = "embedding_deployment"
-version = "0.15.0"
+version = "0.16.0"
 description = "Benchmark for various options of deploying embedding models."
 requires-python = "==3.13.*"
 dependencies = [
@@ -14,7 +14,7 @@ dependencies = [
 [dependency-groups]
 benchmark = [
     "httpx==0.28.*",
-    "pdfminer-six==20251230",
+    "pdfminer-six==20260107",
     "pypdf==6.5.*",
 ]
 dev = [
@@ -37,7 +37,7 @@ sentence_transformers = [
 test = [
     "httpx==0.28.*",
     "pytest==9.0.*",
-    "testcontainers==4.13.*",
+    "testcontainers==4.14.*",
 ]
 
 [tool.pytest.ini_options]

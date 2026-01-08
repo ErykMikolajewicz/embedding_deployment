@@ -1,11 +1,18 @@
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import Depends, FastAPI
 
 from src.domain.protocols import TextsEncoder
-from src.framework.dependencies import get_texts_encoder
+from src.framework.dependencies import get_texts_encoder, initialize_encoder
 from src.framework.models import Embeddings, Texts
 
-app = FastAPI(title="EmbeddingGemma Service")
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    initialize_encoder()
+    yield
+
+app = FastAPI(title="EmbeddingGemma Service", lifespan=lifespan)
 
 
 @app.post("/api/embed", response_model=Embeddings)

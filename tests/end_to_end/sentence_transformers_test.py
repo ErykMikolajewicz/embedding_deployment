@@ -8,7 +8,7 @@ from testcontainers.core.wait_strategies import HttpWaitStrategy
 from tests.consts import SENTENCE_TRANSFORMERS_PORT as ST_PORT
 
 
-@pytest.mark.parametrize("quantization", [None, "int8", "int4"])
+@pytest.mark.parametrize("quantization", [None, "bf16"])
 def test_build_st(quantization, sentences, measure_similarity):
     image_name = "sentence_transformers_embedding:tests"
     building_command = [
@@ -19,18 +19,17 @@ def test_build_st(quantization, sentences, measure_similarity):
         "-f",
         "./building/sentence_transformers/Containerfile",
         "--secret",
-        "id=hf_token,src_bench=./secrets/hf_token.txt",
+        "id=hf_token,src=./secrets/hf_token.txt",
         ".",
     ]
 
-    if quantization:
-        building_command.extend(["--build-arg", f"QUANTIZATION={quantization}"])
-
     build_result = subprocess.run(building_command)
+
     assert build_result.returncode == 0, "Building image failed"
 
     wait_strategy = HttpWaitStrategy(ST_PORT, "/health").with_method("GET")
-    with DockerContainer(image_name).with_exposed_ports(ST_PORT).waiting_for(wait_strategy) as st_container:
+    with (DockerContainer(image_name).with_exposed_ports(ST_PORT).waiting_for(wait_strategy)
+                  .with_env("QUANTIZATION", quantization) as st_container):
         port = st_container.get_exposed_port(ST_PORT)
         url_st = f"http://localhost:{port}/api/embed"
 
