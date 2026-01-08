@@ -3,21 +3,19 @@ from unittest.mock import patch
 import httpx
 import pytest
 from src_bench.domain.enums import FrameworkType
-from src_bench.infrastructure.adapters import CustomFormatAdapter, OllamaAdapter, get_adapter
+from src_bench.infrastructure.adapters import CustomRestAdapter, OllamaAdapter, get_adapter_rest
 
 
 @pytest.mark.parametrize("framework_type", FrameworkType)
 def test_get_adapter(framework_type: FrameworkType):
-    adapter_class = get_adapter(framework_type)
+    adapter_class = get_adapter_rest(framework_type)
 
-    adapter = adapter_class(port=8000)
-
-    assert callable(getattr(adapter, "get_embeddings"))
+    assert callable(getattr(adapter_class, "get_embeddings"))
 
 
-def test_custom_format_adapter(sentences, fake_embeddings):
+def test_custom_rest_adapter(sentences, fake_embeddings):
     port = 8000
-    custom_format_adapter = CustomFormatAdapter(port=port)
+    custom_format_adapter = CustomRestAdapter(port=port)
 
     response = httpx.Response(
         status_code=200,
@@ -38,7 +36,7 @@ def test_custom_format_adapter(sentences, fake_embeddings):
 @pytest.mark.parametrize("quantization", [None, "bf16", "int8", "int4"])
 def test_ollama_adapter(sentences, fake_embeddings, quantization):
     port = 8000
-    ollama_adapter = OllamaAdapter(port=port)
+    ollama_adapter = OllamaAdapter(port, quantization)
 
     ollama_json = {"embeddings": fake_embeddings}
 
@@ -49,7 +47,7 @@ def test_ollama_adapter(sentences, fake_embeddings, quantization):
     )
 
     with patch("httpx.post", return_value=response):
-        embeddings = ollama_adapter.get_embeddings(sentences, quantization)
+        embeddings = ollama_adapter.get_embeddings(sentences)
 
     assert len(embeddings) == len(sentences)
 

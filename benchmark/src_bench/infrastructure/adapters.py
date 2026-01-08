@@ -1,23 +1,23 @@
 from collections.abc import Iterable
-from typing import Any
 
 import httpx
 from src_bench.domain.enums import FrameworkType
+from src_bench.domain.ports import EmbeddingsPort
 
 
-def get_adapter(adapter_type: FrameworkType) -> Any:
+def get_adapter_rest(adapter_type: FrameworkType) -> EmbeddingsPort:
     match adapter_type:
         case FrameworkType.ONNX:
-            return CustomFormatAdapter
+            return CustomRestAdapter
         case FrameworkType.OLLAMA:
             return OllamaAdapter
         case FrameworkType.SENTENCE_TRANSFORMERS:
-            return CustomFormatAdapter
+            return CustomRestAdapter
         case _:
             raise Exception("Invalid adapter type!")
 
 
-class CustomFormatAdapter:
+class CustomRestAdapter:
     def __init__(self, port: int):
         self.__port = port
 
@@ -41,16 +41,15 @@ class OllamaAdapter:
         "int4": "embeddinggemma:300m-qat-q4_0",
     }
 
-    def __init__(self, port: int):
+    def __init__(self, port: int, quantization: str):
         self.__port = port
+        self.__model = OllamaAdapter.quantization_to_model[quantization]
 
-    def get_embeddings(self, texts: Iterable[str], quantization: str) -> list[list[float]]:
+    def get_embeddings(self, texts: Iterable[str]) -> list[list[float]]:
         url = f"localhost:{self.__port}/api/embed"
 
-        model = OllamaAdapter.quantization_to_model[quantization]
-
         payload = {
-            "model": model,
+            "model": self.__model,
             "input": texts,
         }
 
@@ -59,5 +58,42 @@ class OllamaAdapter:
         data = resp.json()
 
         embeddings = data["embeddings"]
+
+        return embeddings
+
+
+def get_direct_adapter(adapter_type: FrameworkType) -> EmbeddingsPort:
+    match adapter_type:
+        case FrameworkType.ONNX:
+            return DirectOnnxAdapter
+        case FrameworkType.OLLAMA:
+            raise Exception("Ollama not supported")
+        case FrameworkType.SENTENCE_TRANSFORMERS:
+            return DirectSentenceTransformersAdapter
+        case _:
+            raise Exception("Invalid adapter type!")
+
+
+class DirectOnnxAdapter:
+    def __init__(self, quantization: str):
+        from src.infrastructure.adapters.onnx_encoding import OnnxEncoder
+
+        self.__encoder = OnnxEncoder(quantization)
+
+    def get_embeddings(self, texts: Iterable[str]) -> list[list[float]]:
+
+        embeddings = self.__encoder.encode(texts)
+
+        return embeddings
+
+
+class DirectSentenceTransformersAdapter:
+    def __init__(self, quantization: str):
+        from src.infrastructure.adapters.sentence_transformers_encoding import SentenceTransformersEncoder
+
+        self.__encoder = SentenceTransformersEncoder(quantization)
+
+    def get_embeddings(self, texts: list[str]) -> list[list[float]]:
+        embeddings = self.__encoder.encode(texts)
 
         return embeddings

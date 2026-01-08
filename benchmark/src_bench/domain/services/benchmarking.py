@@ -3,14 +3,14 @@ from functools import partial
 from src_bench.domain.enums import FrameworkType
 from src_bench.domain.models import FrameworkBenchConfig, FrameworkResult
 from src_bench.domain.services.measure import rest_test
-from src_bench.infrastructure.adapters import get_adapter
+from src_bench.infrastructure.adapters import get_adapter_rest
 
 
 def benchmark_framework(
     framework_config: FrameworkBenchConfig, benchmark_data: tuple[str, ...]
 ) -> list[FrameworkResult]:
     framework = framework_config.framework
-    adapter = get_adapter(framework)
+    adapter = get_adapter_rest(framework)
 
     measure_numbers = 3
     batches = framework_config.batches_sizes
