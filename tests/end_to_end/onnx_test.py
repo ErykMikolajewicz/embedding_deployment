@@ -16,8 +16,12 @@ def test_build_onnx(quantization, sentences, measure_similarity):
         tag="onnx_embedding:tests",
         buildargs={"QUANTIZATION": quantization},
     ) as image:
-        with (DockerContainer(str(image)).with_exposed_ports(ONNX_PORT).waiting_for(wait_strategy).
-                      with_env("QUANTIZATION", quantization)) as onnx_container:
+        with (
+            DockerContainer(str(image))
+            .with_exposed_ports(ONNX_PORT)
+            .waiting_for(wait_strategy)
+            .with_env("QUANTIZATION", quantization)
+        ) as onnx_container:
             port = onnx_container.get_exposed_port(ONNX_PORT)
             url_onnx = f"http://localhost:{port}/api/embed"
 

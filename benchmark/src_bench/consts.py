@@ -1,1 +1,3 @@
-CONFIG_FILE_NAME = "benchmark_config.json"
+CONFIG_FILE_NAME = "config.json"
+
+DEFAULT_HTTP_PORT = 8000

@@ -5,7 +5,7 @@ from src_bench.domain.enums import FrameworkType
 from src_bench.domain.ports import EmbeddingsPort
 
 
-def get_adapter_rest(adapter_type: FrameworkType) -> EmbeddingsPort:
+def get_adapter_rest(adapter_type: FrameworkType) -> type[EmbeddingsPort]:
     match adapter_type:
         case FrameworkType.ONNX:
             return CustomRestAdapter
@@ -18,11 +18,11 @@ def get_adapter_rest(adapter_type: FrameworkType) -> EmbeddingsPort:
 
 
 class CustomRestAdapter:
-    def __init__(self, port: int):
+    def __init__(self, port: int, _: str):
         self.__port = port
 
     def get_embeddings(self, texts: Iterable[str]) -> list[list[float]]:
-        url = f"localhost:{self.__port}/api/embed"
+        url = f"http://localhost:{self.__port}/api/embed"
 
         payload = texts
 

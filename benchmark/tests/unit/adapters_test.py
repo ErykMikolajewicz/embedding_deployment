@@ -15,7 +15,7 @@ def test_get_adapter(framework_type: FrameworkType):
 
 def test_custom_rest_adapter(sentences, fake_embeddings):
     port = 8000
-    custom_format_adapter = CustomRestAdapter(port=port)
+    custom_format_adapter = CustomRestAdapter(port, "")
 
     response = httpx.Response(
         status_code=200,

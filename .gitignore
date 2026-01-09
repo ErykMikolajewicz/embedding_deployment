@@ -3,4 +3,6 @@
 /benchmark/.env
 /secrets/
 /models/
-/benchmark/benchmark_config.json
+/benchmark/config.json
+
+.idea

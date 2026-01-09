@@ -1,16 +1,16 @@
 [
   {
-    "framework": "onnx",
+    "framework": "ONNX",
     "batches_sizes": [5, 10, 20, 50],
     "quantization_types": ["int4", "int8", "fp16"]
   },
   {
-    "framework": "ollama",
+    "framework": "OLLAMA",
     "batches_sizes": [5, 10, 20, 50],
     "quantization_types": ["int4", "int8", "fp16"]
   },
   {
-    "framework": "sentence_transformers",
+    "framework": "SENTENCE_TRANSFORMERS",
     "batches_sizes": [5, 10, 20, 50],
     "quantization_types": ["int4", "int8", "fp16"]
   }

@@ -1,9 +1,8 @@
-from typing import Protocol, Any
-from collections.abc import Callable
+from collections.abc import Iterable
+from typing import Protocol
 
 
 class EmbeddingsPort(Protocol):
-    __init__: Callable[..., Any]
+    def __init__(self, port: int, quantization: str): ...
 
-    def get_embeddings(self, texts: list[str]) -> list[list[float]]:
-        ...
+    def get_embeddings(self, texts: Iterable[str]) -> list[list[float]]: ...

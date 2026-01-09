@@ -1,14 +1,14 @@
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from datetime import datetime, timedelta
 
 
 def rest_test(
-    articles: tuple[str, ...], batch_size: int, get_embeddings: Callable[[tuple[str, ...]], None]
+    texts: tuple[str, ...], batch_size: int, get_embeddings: Callable[[Iterable[str]], list[list[float]]]
 ) -> timedelta:
-    num_articles = len(articles)
+    num_articles = len(texts)
     t1 = datetime.now()
     for i in range(0, num_articles, batch_size):
-        batch_articles = articles[i : i + batch_size]
+        batch_articles = texts[i : i + batch_size]
         get_embeddings(batch_articles)
 
     t2 = datetime.now()

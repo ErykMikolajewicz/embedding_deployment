@@ -28,8 +28,12 @@ def test_build_st(quantization, sentences, measure_similarity):
     assert build_result.returncode == 0, "Building image failed"
 
     wait_strategy = HttpWaitStrategy(ST_PORT, "/health").with_method("GET")
-    with (DockerContainer(image_name).with_exposed_ports(ST_PORT).waiting_for(wait_strategy)
-                  .with_env("QUANTIZATION", quantization) as st_container):
+    with (
+        DockerContainer(image_name)
+        .with_exposed_ports(ST_PORT)
+        .waiting_for(wait_strategy)
+        .with_env("QUANTIZATION", quantization) as st_container
+    ):
         port = st_container.get_exposed_port(ST_PORT)
         url_st = f"http://localhost:{port}/api/embed"
 

@@ -3,6 +3,7 @@ from sentence_transformers import SentenceTransformer
 from src.domain.quantization import Quantization
 from src.share.consts import MODEL_ROOT
 
+
 class SentenceTransformersEncoder:
     def __init__(self, quantization: str):
         self.__initialize_model(quantization)

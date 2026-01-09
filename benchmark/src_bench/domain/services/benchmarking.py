@@ -1,6 +1,4 @@
-from functools import partial
-
-from src_bench.domain.enums import FrameworkType
+from src_bench.consts import DEFAULT_HTTP_PORT
 from src_bench.domain.models import FrameworkBenchConfig, FrameworkResult
 from src_bench.domain.services.measure import rest_test
 from src_bench.infrastructure.adapters import get_adapter_rest
@@ -10,17 +8,15 @@ def benchmark_framework(
     framework_config: FrameworkBenchConfig, benchmark_data: tuple[str, ...]
 ) -> list[FrameworkResult]:
     framework = framework_config.framework
-    adapter = get_adapter_rest(framework)
+    adapter_class = get_adapter_rest(framework)
 
     measure_numbers = 3
     batches = framework_config.batches_sizes
 
     results = []
     for quantization in framework_config.quantization_types:
-        if framework == FrameworkType.OLLAMA:
-            get_embeddings = partial(adapter.get_embeddings, quantization)
-        else:
-            get_embeddings = adapter.get_embeddings
+        adapter = adapter_class(DEFAULT_HTTP_PORT, quantization)
+        get_embeddings = adapter.get_embeddings
 
         for batch_size in batches:
             measure_results = []

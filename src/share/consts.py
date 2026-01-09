@@ -1,1 +1,1 @@
-MODEL_ROOT = '/embedding_deployment'
+MODEL_ROOT = "/embedding_deployment"

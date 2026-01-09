@@ -5,6 +5,7 @@ from src.share.settings.quantization import quantization_settings
 
 encoder = None
 
+
 def initialize_encoder():
     global encoder
     match app_settings.DECODER_TYPE:
