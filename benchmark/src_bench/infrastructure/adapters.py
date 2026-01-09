@@ -2,10 +2,10 @@ from collections.abc import Iterable
 
 import httpx
 from src_bench.domain.enums import FrameworkType
-from src_bench.domain.ports import EmbeddingsPort
+from src_bench.domain.ports import DirectEmbeddingsAdapter, RestEmbeddingsAdapter
 
 
-def get_adapter_rest(adapter_type: FrameworkType) -> type[EmbeddingsPort]:
+def get_adapter_rest(adapter_type: FrameworkType) -> type[RestEmbeddingsAdapter]:
     match adapter_type:
         case FrameworkType.ONNX:
             return CustomRestAdapter
@@ -62,7 +62,7 @@ class OllamaAdapter:
         return embeddings
 
 
-def get_direct_adapter(adapter_type: FrameworkType) -> EmbeddingsPort:
+def get_direct_adapter(adapter_type: FrameworkType) -> DirectEmbeddingsAdapter:
     match adapter_type:
         case FrameworkType.ONNX:
             return DirectOnnxAdapter
