@@ -1,11 +1,11 @@
 import os
 
-from src_bench.domain.models import FrameworkResult, BenchRunData
-from src_bench.domain.services.benchmarking import benchmark_function
+from src_bench.consts import DEFAULT_HTTP_PORT
 from src_bench.domain.enums import AdapterType
+from src_bench.domain.models import BenchRunData, FrameworkResult
+from src_bench.domain.services.benchmarking import benchmark_function
 from src_bench.domain.services.general import get_benchmark_config, get_benchmark_data
 from src_bench.infrastructure.adapters import get_adapter_rest, get_direct_adapter
-from src_bench.consts import DEFAULT_HTTP_PORT
 
 
 def run_benchmark() -> list[FrameworkResult]:
@@ -29,16 +29,18 @@ def run_benchmark() -> list[FrameworkResult]:
                     adapter_class = get_direct_adapter(framework_type)
                     adapter = adapter_class(quantization)
                 case _:
-                    raise Exception(f'Invalid adapter type {adapter_type} !')
+                    raise Exception(f"Invalid adapter type {adapter_type} !")
 
             measure_function = adapter.get_embeddings
 
             for batch_size in framework_config.batches_sizes:
 
-                bench_run_data = BenchRunData(measure_number=measure_number,
-                                              measure_function=measure_function,
-                                              data=benchmark_data,
-                                              batch_size=batch_size)
+                bench_run_data = BenchRunData(
+                    measure_number=measure_number,
+                    measure_function=measure_function,
+                    data=benchmark_data,
+                    batch_size=batch_size,
+                )
                 adapter_result = benchmark_function(bench_run_data)
 
                 framework_result = FrameworkResult(framework_type, batch_size, quantization, adapter_result, None)

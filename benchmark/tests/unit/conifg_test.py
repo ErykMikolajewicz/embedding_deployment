@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from src_bench.domain.models import FrameworkBenchConfig, BenchConfig
+from src_bench.domain.models import BenchConfig, FrameworkBenchConfig
 from src_bench.domain.services.general import get_benchmark_config
 
 

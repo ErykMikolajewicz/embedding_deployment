@@ -1,4 +1,4 @@
-from collections.abc import Callable, Sequence, Iterable
+from collections.abc import Callable, Iterable, Sequence
 from datetime import datetime, timedelta
 
 

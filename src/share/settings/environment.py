@@ -10,6 +10,4 @@ ENV_FILE = Path(".env")
 class EnvironmentSettings(BaseSettings):
     ENVIRONMENT: Environment = ...
 
-    model_config = SettingsConfigDict(
-        env_file=ENV_FILE, case_sensitive=True, frozen=True, extra="ignore"
-    )
+    model_config = SettingsConfigDict(env_file=ENV_FILE, case_sensitive=True, frozen=True, extra="ignore")

@@ -81,7 +81,9 @@ def test_direct_onnx_adapter(sentences, quantization):
 
 @pytest.mark.parametrize("quantization", [None, "bf16"])
 def test_direct_sentence_transformers_adapter(sentences, quantization):
-    with patch("src.infrastructure.adapters.sentence_transformers_encoding.get_model_root_path", return_value="./models"):
+    with patch(
+        "src.infrastructure.adapters.sentence_transformers_encoding.get_model_root_path", return_value="./models"
+    ):
         direct_st_adapter = adapters.DirectSentenceTransformersAdapter(quantization)
 
     sentences = list(sentences)  # to satisfy type hints

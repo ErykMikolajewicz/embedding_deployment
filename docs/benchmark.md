@@ -22,7 +22,7 @@ For each batch size, the entire Code of Administrative Procedure was processed.
 
 ## Benchmark Results
 
-### Execution Time
+### Execution Time Rest
 | Runtime | Batch size | F32 [s] | FP16 [s] | INT8 [s] |
 |---------|------------|---------|----------|----------|
 | ONNX    | 5          | 19.71   | 19.35    | 10.05    |
@@ -33,6 +33,19 @@ For each batch size, the entire Code of Administrative Procedure was processed.
 | ollama  | 10         | -       | 41.70    | 41.16    |
 | ollama  | 20         | -       | 41.74    | 40.99    |
 | ollama  | 50         | -       | 42.27    | 40.25    |
+
+
+### Execution Time Direct
+| Runtime               | Batch size | F32 [s] | BF16 [s] | FP16 [s] | INT8 [s] | INT4 [s] |
+|-----------------------|------------|---------|----------|----------|----------|----------|
+| ONNX                  | 5          | 21.65   | -        | 23.87    | 11.88    | 22.53    |
+| ONNX                  | 10         | 22.53   | -        | 24.76    | 11.55    | 23.15    |
+| ONNX                  | 20         | 24.97   | -        | 27.77    | 13.08    | 26.11    |
+| ONNX                  | 50         | 35.54   | -        | 39.56    | 19.85    | 35.62    |
+| sentence_transformers | 5          | 30.30   | 116.99   | -        | -        | -        |
+| sentence_transformers | 10         | 29.36   | 120.23   | -        | -        | -        |
+| sentence_transformers | 20         | 34.25   | 132.51   | -        | -        | -        |
+| sentence_transformers | 50         | 51.7    | 206.36   | -        | -        | -        |
 
 ### Model Size
 | Runtime | F32    | FP16   | INT8   |
