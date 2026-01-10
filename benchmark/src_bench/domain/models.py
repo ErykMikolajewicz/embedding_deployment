@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from collections.abc import Callable, Iterable, Sequence
+from typing import Optional
 
-from src_bench.domain.enums import FrameworkType
+from src_bench.domain.enums import FrameworkType, AdapterType
 
 
 @dataclass
@@ -11,9 +13,24 @@ class FrameworkBenchConfig:
 
 
 @dataclass
+class BenchConfig:
+    measure_number: int
+    adapter_type: AdapterType
+    frameworks_config: list[FrameworkBenchConfig]
+
+
+@dataclass
 class FrameworkResult:
     framework: FrameworkType
     batch_size: int
     quantization: str
     execution_time: float
-    image_size: str
+    image_size: Optional[str]
+
+
+@dataclass
+class BenchRunData:
+    measure_number: int
+    measure_function: Callable[[Iterable[str]], list[list[float]]]
+    data: Sequence[str]
+    batch_size: int

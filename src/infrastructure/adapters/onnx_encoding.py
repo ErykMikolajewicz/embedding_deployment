@@ -5,7 +5,7 @@ import onnxruntime as ort
 from tokenizers import Tokenizer
 
 from src.domain.quantization import Quantization
-from src.share.consts import MODEL_ROOT
+from src.infrastructure.utils import get_model_root_path
 
 
 class OnnxEncoder:
@@ -14,10 +14,11 @@ class OnnxEncoder:
         self.__initialize_session()
 
     def __initialize_session(self):
-        model_path = f"{MODEL_ROOT}/onnx/model{self.__quantization}.onnx"
+        model_root = get_model_root_path()
+        model_path = f"{model_root}/onnx/model{self.__quantization}.onnx"
         self.__session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
 
-        self.__tokenizer = Tokenizer.from_file(f"{MODEL_ROOT}/onnx/tokenizer/tokenizer.json")
+        self.__tokenizer = Tokenizer.from_file(f"{model_root}/onnx/tokenizer/tokenizer.json")
         self.__tokenizer.enable_padding(length=None, pad_id=0)
 
     def __set_quantization(self, quantization):

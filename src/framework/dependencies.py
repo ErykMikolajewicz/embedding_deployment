@@ -1,6 +1,6 @@
 from src.domain.protocols import TextsEncoder
 from src.infrastructure.enums import DecoderType
-from src.share.settings.app import app_settings
+from src.share.settings.app import AppSettings
 from src.share.settings.quantization import quantization_settings
 
 encoder = None
@@ -8,6 +8,7 @@ encoder = None
 
 def initialize_encoder():
     global encoder
+    app_settings = AppSettings()
     match app_settings.DECODER_TYPE:
         case DecoderType.ONNX:
             from src.infrastructure.adapters.onnx_encoding import OnnxEncoder

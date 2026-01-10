@@ -67,7 +67,7 @@ def test_get_direct_adapter(framework_type: FrameworkType):
 
 @pytest.mark.parametrize("quantization", [None, "fp16", "int8", "int4"])
 def test_direct_onnx_adapter(sentences, quantization):
-    with patch("src.infrastructure.adapters.onnx_encoding.MODEL_ROOT", "./models"):
+    with patch("src.infrastructure.adapters.onnx_encoding.get_model_root_path", return_value="./models"):
         direct_onnx_adapter = adapters.DirectOnnxAdapter(quantization)
 
     embeddings = direct_onnx_adapter.get_embeddings(sentences)
@@ -81,7 +81,7 @@ def test_direct_onnx_adapter(sentences, quantization):
 
 @pytest.mark.parametrize("quantization", [None, "bf16"])
 def test_direct_sentence_transformers_adapter(sentences, quantization):
-    with patch("src.infrastructure.adapters.sentence_transformers_encoding.MODEL_ROOT", "./models"):
+    with patch("src.infrastructure.adapters.sentence_transformers_encoding.get_model_root_path", return_value="./models"):
         direct_st_adapter = adapters.DirectSentenceTransformersAdapter(quantization)
 
     sentences = list(sentences)  # to satisfy type hints

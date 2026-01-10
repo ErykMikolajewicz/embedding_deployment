@@ -1,6 +1,7 @@
 FROM python:3.13-slim-trixie AS builder
 
 ENV APP_DECODER_TYPE=SENTENCE_TRANSFORMERS
+ENV ENVIRONMENT=CONTAINER
 
 RUN useradd -r embedding_generator
 

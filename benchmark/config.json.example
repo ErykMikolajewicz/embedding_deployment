@@ -1,17 +1,17 @@
-[
-  {
-    "framework": "ONNX",
-    "batches_sizes": [5, 10, 20, 50],
-    "quantization_types": ["int4", "int8", "fp16"]
-  },
-  {
-    "framework": "OLLAMA",
-    "batches_sizes": [5, 10, 20, 50],
-    "quantization_types": ["int4", "int8", "fp16"]
-  },
-  {
-    "framework": "SENTENCE_TRANSFORMERS",
-    "batches_sizes": [5, 10, 20, 50],
-    "quantization_types": ["int4", "int8", "fp16"]
-  }
-]
+{
+"measure_number": 5,
+"adapter_type": "DIRECT",
+"frameworks_config":
+    [
+      {
+        "framework": "ONNX",
+        "batches_sizes": [5, 10, 20, 50],
+        "quantization_types": [null, "fp16", "int8", "int4"]
+      },
+      {
+        "framework": "SENTENCE_TRANSFORMERS",
+        "batches_sizes": [5, 10, 20, 50],
+        "quantization_types": [null, "bf16"]
+      }
+    ]
+}

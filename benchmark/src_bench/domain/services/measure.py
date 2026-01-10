@@ -1,9 +1,9 @@
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Sequence, Iterable
 from datetime import datetime, timedelta
 
 
-def rest_test(
-    texts: tuple[str, ...], batch_size: int, get_embeddings: Callable[[Iterable[str]], list[list[float]]]
+def measure_execution_time(
+    texts: Sequence[str], batch_size: int, get_embeddings: Callable[[Iterable[str]], list[list[float]]]
 ) -> timedelta:
     num_articles = len(texts)
     t1 = datetime.now()
