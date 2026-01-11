@@ -5,18 +5,21 @@ ENV ENVIRONMENT=CONTAINER
 
 RUN useradd -r embedding_generator
 
+RUN pip install --no-cache-dir uv
+
 WORKDIR /embedding_deployment
 
-RUN pip install --no-cache-dir uv
+RUN chown embedding_generator:embedding_generator /embedding_deployment
+USER embedding_generator
 
 COPY pyproject.toml pyproject.toml
 
 RUN uv sync --group sentence-transformers --no-cache
 
 COPY building/sentence_transformers/model_download.py model_download.py
-RUN --mount=type=secret,id=hf_token .venv/bin/python model_download.py
 
-RUN chown -R embedding_generator:embedding_generator /embedding_deployment
+USER root
+RUN --mount=type=secret,id=hf_token .venv/bin/python model_download.py
 USER embedding_generator
 
 COPY src src

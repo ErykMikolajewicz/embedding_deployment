@@ -16,23 +16,27 @@ For each batch size, the entire Code of Administrative Procedure was processed.
 
 ## Methodology
 
-- Number of measurements per case: **3**
-- The lowest result from each sample was selected
+- Number of measurements per case: **5**
+- The median result from each sample was selected
 - Measured parameter: **execution time**
 
 ## Benchmark Results
 
 ### Execution Time Rest
-| Runtime | Batch size | F32 [s] | FP16 [s] | INT8 [s] |
-|---------|------------|---------|----------|----------|
-| ONNX    | 5          | 19.71   | 19.35    | 10.05    |
-| ONNX    | 10         | 22.23   | 23.93    | 11.47    |
-| ONNX    | 20         | 25.21   | 27.48    | 12.99    |
-| ONNX    | 50         | 35.88   | 39.37    | 19.23    |
-| ollama  | 5          | -       | 39.71    | 39.86    |
-| ollama  | 10         | -       | 41.70    | 41.16    |
-| ollama  | 20         | -       | 41.74    | 40.99    |
-| ollama  | 50         | -       | 42.27    | 40.25    |
+| Runtime               | Batch size | F32 [s] | BF16 [s] | FP16 [s] | INT8 [s] | INT4 [s] |
+|-----------------------|------------|---------|----------|----------|----------|----------|
+| ONNX                  | 5          | 22.20   | -        | 23.88    | 12.02    | 22.43    |
+| ONNX                  | 10         | 22.34   | -        | 24.46    | 11.73    | 22.94    |
+| ONNX                  | 20         | 25.18   | -        | 27.72    | 13.15    | 25.90    |
+| ONNX                  | 50         | 35.82   | -        | 39.54    | 19.39    | 37.71    |
+| ollama                | 5          | -       | 43.82    | -        | 43.92    | 48.02    |
+| ollama                | 10         | -       | 42.28    | -        | 41.73    | 45.41    |
+| ollama                | 20         | -       | 41.14    | -        | 40.92    | 44.12    |
+| ollama                | 50         | -       | 41.16    | -        | 40.27    | 43.81    |
+| sentence_transformers | 5          | 30.16   | 106.37   | -        | -        | -        |
+| sentence_transformers | 10         | 29.63   | 106.85   | -        | -        | -        |
+| sentence_transformers | 20         | 35.60   | 123.34   | -        | -        | -        |
+| sentence_transformers | 50         | 52,61   | 209.87   | -        | -        | -        |
 
 
 ### Execution Time Direct
@@ -48,10 +52,11 @@ For each batch size, the entire Code of Administrative Procedure was processed.
 | sentence_transformers | 50         | 51.7    | 206.36   | -        | -        | -        |
 
 ### Model Size
-| Runtime | F32    | FP16   | INT8   |
-|---------|--------|--------|--------|
-| ONNX    | 1.59GB | 973MB  | 668MB  |
-| ollama  | -      | 4.57GB | 4.29GB |
+| Runtime               | F32    | BF16   | FP16  | INT8  | INT4  |
+|-----------------------|--------|--------|-------|-------|-------|
+| ONNX                  | 1.59GB | -      | 978MB | 673MB | 557MB |
+| ollama                | -      | 4.58GB | -     | 4.3GB | 4.2GB |
+| sentence-transformers | 8.74GB | 8.74GB | -     | -     | _     |
 
 ## Conclusions
 
