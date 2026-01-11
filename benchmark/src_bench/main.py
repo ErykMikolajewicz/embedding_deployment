@@ -2,10 +2,11 @@ import os
 
 from src_bench.consts import DEFAULT_HTTP_PORT
 from src_bench.domain.enums import AdapterType
-from src_bench.domain.models import BenchRunData, FrameworkResult
-from src_bench.domain.services.benchmarking import benchmark_function
+from src_bench.domain.models import FrameworkResult
+from src_bench.domain.services.benchmarking import BenchmarkRunner
 from src_bench.domain.services.general import get_benchmark_config, get_benchmark_data
 from src_bench.infrastructure.adapters import get_adapter_rest, get_direct_adapter
+from src_bench.infrastructure.containers import get_container_instantiate
 
 
 def run_benchmark() -> list[FrameworkResult]:
@@ -23,6 +24,8 @@ def run_benchmark() -> list[FrameworkResult]:
         for quantization in framework_config.quantization_types:
             match adapter_type:
                 case AdapterType.REST:
+                    container_instantiate_class = get_container_instantiate(framework_type)
+                    container_instantiate = container_instantiate_class(quantization)
                     adapter_class = get_adapter_rest(framework_type)
                     adapter = adapter_class(DEFAULT_HTTP_PORT, quantization)
                 case AdapterType.DIRECT:
@@ -33,19 +36,19 @@ def run_benchmark() -> list[FrameworkResult]:
 
             measure_function = adapter.get_embeddings
 
+            benchmark_runner = BenchmarkRunner(measure_number, benchmark_data)
+
             for batch_size in framework_config.batches_sizes:
+                if adapter_type == AdapterType.DIRECT:
+                        adapter_result = benchmark_runner.benchmark_function(measure_function, batch_size)
+                else:
+                    with container_instantiate:
+                        adapter_result = benchmark_runner.benchmark_function(measure_function, batch_size)
 
-                bench_run_data = BenchRunData(
-                    measure_number=measure_number,
-                    measure_function=measure_function,
-                    data=benchmark_data,
-                    batch_size=batch_size,
-                )
-                adapter_result = benchmark_function(bench_run_data)
-
-                framework_result = FrameworkResult(framework_type, batch_size, quantization, adapter_result, None)
+                framework_result = FrameworkResult(framework_type, batch_size, quantization, adapter_result)
 
                 results.append(framework_result)
+
                 print(framework_result)
 
     return results

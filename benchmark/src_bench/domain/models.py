@@ -25,7 +25,6 @@ class FrameworkResult:
     batch_size: int
     quantization: str
     execution_time: float
-    image_size: Optional[str]
 
 
 @dataclass

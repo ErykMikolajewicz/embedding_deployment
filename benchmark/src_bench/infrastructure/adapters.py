@@ -5,8 +5,8 @@ from src_bench.domain.enums import FrameworkType
 from src_bench.domain.ports import DirectEmbeddingsAdapter, RestEmbeddingsAdapter
 
 
-def get_adapter_rest(adapter_type: FrameworkType) -> type[RestEmbeddingsAdapter]:
-    match adapter_type:
+def get_adapter_rest(framework_type: FrameworkType) -> type[RestEmbeddingsAdapter]:
+    match framework_type:
         case FrameworkType.ONNX:
             return CustomRestAdapter
         case FrameworkType.OLLAMA:
@@ -26,7 +26,7 @@ class CustomRestAdapter:
 
         payload = texts
 
-        resp = httpx.post(url, json=payload, timeout=60)
+        resp = httpx.post(url, json=payload, timeout=500)
 
         embeddings = resp.json()
 
@@ -46,7 +46,7 @@ class OllamaAdapter:
         self.__model = OllamaAdapter.quantization_to_model[quantization]
 
     def get_embeddings(self, texts: Iterable[str]) -> list[list[float]]:
-        url = f"localhost:{self.__port}/api/embed"
+        url = f"http://localhost:{self.__port}/api/embed"
 
         payload = {
             "model": self.__model,
@@ -62,8 +62,8 @@ class OllamaAdapter:
         return embeddings
 
 
-def get_direct_adapter(adapter_type: FrameworkType) -> DirectEmbeddingsAdapter:
-    match adapter_type:
+def get_direct_adapter(framework_type: FrameworkType) -> DirectEmbeddingsAdapter:
+    match framework_type:
         case FrameworkType.ONNX:
             return DirectOnnxAdapter
         case FrameworkType.OLLAMA:

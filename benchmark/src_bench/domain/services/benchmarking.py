@@ -1,21 +1,21 @@
 from statistics import median
+from collections.abc import Sequence, Callable
 
-from src_bench.domain.models import BenchRunData
 from src_bench.domain.services.measure import measure_execution_time
 
 
-def benchmark_function(bench_run_data: BenchRunData) -> float:
-    measure_numbers = bench_run_data.measure_number
-    batch_size = bench_run_data.batch_size
-    benchmark_data = bench_run_data.data
-    measure_function = bench_run_data.measure_function
+class BenchmarkRunner:
+    def __init__(self, measure_number: int, benchmark_data: Sequence):
+        self.__measure_number = measure_number
+        self.__benchmark_data = benchmark_data
 
-    measure_results = []
-    for measure_number in range(measure_numbers):
-        result = measure_execution_time(benchmark_data, batch_size, measure_function)
-        result_number = result.seconds + result.microseconds / 1_000_000
-        result = round(result_number, 2)
-        measure_results.append(result)
-    min_result = median(measure_results)
+    def benchmark_function(self, measure_function: Callable, batch_size: int) -> float:
+        measure_results = []
+        for measure_number in range(self.__measure_number):
+            result = measure_execution_time(self.__benchmark_data, batch_size, measure_function)
+            result_number = result.seconds + result.microseconds / 1_000_000
+            result = round(result_number, 2)
+            measure_results.append(result)
+        median_time = median(measure_results)
 
-    return min_result
+        return median_time
