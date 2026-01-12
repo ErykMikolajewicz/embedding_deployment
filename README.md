@@ -2,7 +2,7 @@
 
 ## Project description
 
-The project was created out of the need to find a more efficient way to build container images with models for generating embeddings. The previous approach based on **Hugging Face** and **sentence-transformers**, although convenient to use, resulted in container images of **unacceptably large size** (around 12 GB).
+The project was created out of the need to find a more efficient way to build container images with models for generating embeddings. The previous approach based on **Hugging Face** and **sentence-transformers**, although convenient to use, resulted in container images of **unacceptably large size** (around 9 GB).
 
 The main cause of this issue was the necessity to include machine learning libraries such as:
 - PyTorch  
@@ -35,11 +35,14 @@ Currently prepared:
   - **ONNX Runtime**,
   - **sentence transformers**.
 
+The benchmark results are [here](docs/benchmark/results.md)
+
 ### Model Quantization
 
 The image build process allows selecting different quantization variants, for example:
 - `int8`,
 - `fp16`.
+
 Available options depend strongly on used framework. 
 
 ## Development Plans

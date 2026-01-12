@@ -23,6 +23,7 @@ For each batch size, the entire Code of Administrative Procedure was processed.
 ## Benchmark Results
 
 ### Execution Time Rest
+Measure for container launched on the same machine, and communicate via rest.
 | Runtime               | Batch size | F32 [s] | BF16 [s] | FP16 [s] | INT8 [s] | INT4 [s] |
 |-----------------------|------------|---------|----------|----------|----------|----------|
 | ONNX                  | 5          | 22.20   | -        | 23.88    | 12.02    | 22.43    |
@@ -40,6 +41,7 @@ For each batch size, the entire Code of Administrative Procedure was processed.
 
 
 ### Execution Time Direct
+Measure, for direct call embedding function, launched in the same Python process, as benchmark.
 | Runtime               | Batch size | F32 [s] | BF16 [s] | FP16 [s] | INT8 [s] | INT4 [s] |
 |-----------------------|------------|---------|----------|----------|----------|----------|
 | ONNX                  | 5          | 21.65   | -        | 23.87    | 11.88    | 22.53    |
@@ -60,17 +62,13 @@ For each batch size, the entire Code of Administrative Procedure was processed.
 
 ## Conclusions
 
-### ONNX
-- A clear batching effect is visible. For smaller batch sizes, execution was noticeably faster.
-- **INT8** is clearly the fastest, as expected.
-- **FP16** is slightly slower than **F32**; the lack of hardware support likely forces casting to **F32** on the CPU.
+### General
+The form of deployment, and its overhead is negligible. Models called via rest sometimes was even faster, than called directly.
+In performance question, ONNX was good, Sentence Transformers was mediocre, Ollama was disappointing.
+As image size ollama was improvement but not such great, and onnx was a remarkable success.
+Both ollama, and onnx was easy to use, where Sentence Transformers was harder, especially in quantized forms.
 
-### Ollama
-- Clearly slower than ONNX in every configuration; the results are decidedly disappointing.
-- Only a minor benefit from smaller batch sizes; this parameter has little impact.
-- It was not possible to take advantage of efficient INT8 instructions, or the benefits were overshadowed by other overheads.
-
-**Summary:**
-With ONNX, it was possible to significantly reduce the model size while achieving good performance, especially for INT8.
-The situation is worse with Ollama: the model image remained relatively large over 4GB and performance was relatively low.
-The only advantage of using Ollama is its relative simplicity, which unfortunately comes at the cost of a significant loss of flexibility.
+### Detailed
+- [ONNX](onnx.md)
+- [Ollama](ollama.md)
+- [Sentence Transformers](sentence_transformers.md)
