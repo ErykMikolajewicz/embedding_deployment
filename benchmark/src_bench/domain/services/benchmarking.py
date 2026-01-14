@@ -1,5 +1,5 @@
+from collections.abc import Callable, Sequence
 from statistics import median
-from collections.abc import Sequence, Callable
 
 from src_bench.domain.services.measure import measure_execution_time
 

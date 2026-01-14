@@ -40,7 +40,7 @@ def run_benchmark() -> list[FrameworkResult]:
 
             for batch_size in framework_config.batches_sizes:
                 if adapter_type == AdapterType.DIRECT:
-                        adapter_result = benchmark_runner.benchmark_function(measure_function, batch_size)
+                    adapter_result = benchmark_runner.benchmark_function(measure_function, batch_size)
                 else:
                     with container_instantiate:
                         adapter_result = benchmark_runner.benchmark_function(measure_function, batch_size)

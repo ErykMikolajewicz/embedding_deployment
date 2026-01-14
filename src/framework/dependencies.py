@@ -1,4 +1,4 @@
-from src.domain.protocols import TextsEncoder
+from src.domain.types import EncodeTexts
 from src.infrastructure.enums import DecoderType
 from src.share.settings.app import AppSettings
 from src.share.settings.quantization import quantization_settings
@@ -22,5 +22,5 @@ def initialize_encoder():
             raise Exception("Invalid encoder type!")
 
 
-def get_texts_encoder() -> TextsEncoder:
+def get_texts_encoder() -> EncodeTexts:
     return encoder.encode
