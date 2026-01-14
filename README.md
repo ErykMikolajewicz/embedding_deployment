@@ -23,17 +23,19 @@ This model was selected due to:
 - its **versatility**, not only for semantic search but also for tasks such as clustering,
 - good results in benchmarks,
 - a relatively **small size**, enabling reasonable deployment on:
-  - CPU,
-  - GPU.
+  - CPU;
+  - GPU;
 
 ## Current Project Status
 
 Currently prepared:
 - scripts for building container images,
 - scripts for deploying the model using CPU on:
-  - **Ollama**,
-  - **ONNX Runtime**,
-  - **sentence transformers**.
+  - **Ollama**;
+  - **ONNX Runtime**;
+  - **sentence transformers**;
+  - The **llama-cpp** was also tried, but model gemma300m is currently not supported [GitHub issue](https://github.com/abetlen/llama-cpp-python/issues/2065);
+  - I tried **vLLM**, but support of than framework for CPU look rather poor;
 
 The benchmark results are [here](docs/benchmark/results.md)
 
@@ -48,10 +50,8 @@ Available options depend strongly on used framework.
 ## Development Plans
 
 In the next stages of the project, the following are planned:
-- comparison of the **performance**, and **accuracy** of different deployment options for embedding model,
-- testing of additional environments, including:
-  - `llama.cpp`,
-- deployment of models on **GPU**.
+- comparison of **accuracy** of different quantization and runtime options for embedding model;
+- deployment of models on **GPU**;
 
 ## Possible Extensions
 
