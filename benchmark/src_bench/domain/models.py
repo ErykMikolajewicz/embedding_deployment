@@ -1,6 +1,5 @@
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
-from typing import Optional
 
 from src_bench.domain.enums import AdapterType, FrameworkType
 

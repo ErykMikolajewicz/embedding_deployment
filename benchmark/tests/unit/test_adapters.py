@@ -6,12 +6,14 @@ import src_bench.infrastructure.adapters as adapters
 from src_bench.consts import DEFAULT_HTTP_PORT
 from src_bench.domain.enums import FrameworkType
 
+from src.infrastructure.exceptions import AdapterNotSupported
+
 
 @pytest.mark.parametrize("framework_type", FrameworkType)
 def test_get_rest_adapter(framework_type: FrameworkType):
     adapter_class = adapters.get_adapter_rest(framework_type)
 
-    assert callable(getattr(adapter_class, "get_embeddings"))
+    assert callable(getattr(adapter_class, "get_embeddings", None))
 
 
 def test_custom_rest_adapter(sentences, fake_embeddings):
@@ -58,11 +60,11 @@ def test_ollama_adapter(sentences, fake_embeddings, quantization):
 @pytest.mark.parametrize("framework_type", FrameworkType)
 def test_get_direct_adapter(framework_type: FrameworkType):
     if framework_type == FrameworkType.OLLAMA:
-        with pytest.raises(Exception):
+        with pytest.raises(AdapterNotSupported):
             adapters.get_direct_adapter(framework_type)
     else:
         adapter_class = adapters.get_direct_adapter(framework_type)
-        assert callable(getattr(adapter_class, "get_embeddings"))
+        assert callable(getattr(adapter_class, "get_embeddings", None))
 
 
 @pytest.mark.parametrize("quantization", [None, "fp16", "int8", "int4"])

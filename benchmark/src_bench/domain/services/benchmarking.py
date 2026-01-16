@@ -11,7 +11,7 @@ class BenchmarkRunner:
 
     def benchmark_function(self, measure_function: Callable, batch_size: int) -> float:
         measure_results = []
-        for measure_number in range(self.__measure_number):
+        for _ in range(self.__measure_number):
             result = measure_execution_time(self.__benchmark_data, batch_size, measure_function)
             result_number = result.seconds + result.microseconds / 1_000_000
             result = round(result_number, 2)

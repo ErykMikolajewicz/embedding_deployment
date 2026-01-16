@@ -4,6 +4,8 @@ import httpx
 from src_bench.domain.enums import FrameworkType
 from src_bench.domain.ports import DirectEmbeddingsAdapter, RestEmbeddingsAdapter
 
+from src.infrastructure.exceptions import AdapterNotSupported, InvalidConfigValue
+
 
 def get_adapter_rest(framework_type: FrameworkType) -> type[RestEmbeddingsAdapter]:
     match framework_type:
@@ -14,7 +16,7 @@ def get_adapter_rest(framework_type: FrameworkType) -> type[RestEmbeddingsAdapte
         case FrameworkType.SENTENCE_TRANSFORMERS:
             return CustomRestAdapter
         case _:
-            raise Exception("Invalid adapter type!")
+            raise InvalidConfigValue("adapter type", framework_type)
 
 
 class CustomRestAdapter:
@@ -67,11 +69,11 @@ def get_direct_adapter(framework_type: FrameworkType) -> DirectEmbeddingsAdapter
         case FrameworkType.ONNX:
             return DirectOnnxAdapter
         case FrameworkType.OLLAMA:
-            raise Exception("Ollama not supported")
+            raise AdapterNotSupported("direct adapter", FrameworkType.OLLAMA)
         case FrameworkType.SENTENCE_TRANSFORMERS:
             return DirectSentenceTransformersAdapter
         case _:
-            raise Exception("Invalid adapter type!")
+            raise InvalidConfigValue("adapter type", framework_type)
 
 
 class DirectOnnxAdapter:
@@ -81,7 +83,6 @@ class DirectOnnxAdapter:
         self.__encoder = OnnxEncoder(quantization)
 
     def get_embeddings(self, texts: Iterable[str]) -> list[list[float]]:
-
         embeddings = self.__encoder.encode(texts)
 
         return embeddings

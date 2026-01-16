@@ -1,4 +1,5 @@
 from src.infrastructure.enums import Environment
+from src.infrastructure.exceptions import InvalidConfigValue
 from src.share.settings.environment import EnvironmentSettings
 
 
@@ -11,4 +12,4 @@ def get_model_root_path():
         case Environment.LOCAL:
             return "./models"
         case _:
-            raise Exception("Invalid environment!")
+            raise InvalidConfigValue("ENVIRONMENT", environment_settings.ENVIRONMENT)

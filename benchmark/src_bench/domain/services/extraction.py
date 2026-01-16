@@ -18,7 +18,6 @@ def extract_text(pdf_path: Path, top_margin=50, bottom_margin=60) -> str:
 
 
 def extract_articles(act_text: str) -> list[str]:
-
     pattern = r"\n(?![ARD])"
     act_text = re.sub(pattern, " ", act_text)
 

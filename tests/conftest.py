@@ -32,11 +32,11 @@ def measure_similarity(sentences):
         reference_results = pickle.load(f)
 
     def _inner(results: list[list[float]]):
-        for sentence, vector in zip(sentences, results):
+        for sentence, vector in zip(sentences, results, strict=True):
             reference_vector = reference_results[sentence]
             similarity = cosine_similarity(vector, reference_vector)
-            assert (
-                similarity > QUANTIZATION_SIMILARITY_THRESHOLD
-            ), f"Not enough similar to reference ({similarity}), for sentence:\n{sentence}"
+            assert similarity > QUANTIZATION_SIMILARITY_THRESHOLD, (
+                f"Not enough similar to reference ({similarity}), for sentence:\n{sentence}"
+            )
 
     return _inner

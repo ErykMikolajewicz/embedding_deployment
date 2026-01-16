@@ -1,22 +1,22 @@
-import tempfile, shutil
-import os
 import argparse
+import os
+import shutil
+import tempfile
 
-from huggingface_hub import snapshot_download
-from huggingface_hub import login
+from huggingface_hub import login, snapshot_download
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--environment", required=False, nargs="?", default="container")
 args = parser.parse_args()
 
 environment = args.environment
-if environment == 'container':
-    os.environ['HF_HOME']='/embedding_deployment/hf_home'
-    os.environ['HF_HUB_CACHE']='/embedding_deployment/hf_home/hub'
-    with open('/run/secrets/hf_token', 'r') as f:
+if environment == "container":
+    os.environ["HF_HOME"] = "/embedding_deployment/hf_home"
+    os.environ["HF_HUB_CACHE"] = "/embedding_deployment/hf_home/hub"
+    with open("/run/secrets/hf_token", "r") as f:
         token = f.read().strip()
 else:
-    with open('./secrets/hf_token.txt', 'r') as f:
+    with open("./secrets/hf_token.txt", "r") as f:
         token = f.read().strip()
 login(token)
 
@@ -33,10 +33,6 @@ match environment:
 local_dir = f"{model_root_dir}/sentence_transformers/embeddinggemma-300m"
 tmp_cache = tempfile.mkdtemp(prefix="hf_cache_")
 
-snapshot_download(
-    repo_id=repo_id,
-    local_dir=local_dir,
-    cache_dir=tmp_cache
-)
+snapshot_download(repo_id=repo_id, local_dir=local_dir, cache_dir=tmp_cache)
 
 shutil.rmtree(tmp_cache)

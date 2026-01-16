@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from typing import Annotated
 
 import uvicorn
 from fastapi import Depends, FastAPI
@@ -18,7 +19,7 @@ app = FastAPI(title="EmbeddingGemma Service", lifespan=lifespan)
 
 
 @app.post("/api/embed", response_model=Embeddings)
-def embed(texts: Texts, texts_encoder: EncodeTexts = Depends(get_texts_encoder)):
+def embed(texts: Texts, texts_encoder: Annotated[EncodeTexts, Depends(get_texts_encoder)]):
     texts = texts.model_dump()
     embeddings = texts_encoder(texts)
     embeddings = Embeddings.model_validate(embeddings)
