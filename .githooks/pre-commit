@@ -5,3 +5,5 @@ ruff format
 
 export PYTHONPATH=./benchmark:$PYTHONPATH
 python -m pytest benchmark/tests/unit
+
+git add -u

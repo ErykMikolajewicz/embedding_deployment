@@ -1,4 +1,3 @@
-
 from src.domain.types import EncodeTexts
 from src.infrastructure.enums import DecoderType
 from src.share.settings.app import AppSettings
@@ -19,4 +18,3 @@ def initialize_encoder() -> EncodeTexts:
         case _:
             raise Exception("Invalid encoder type!")
     return encoder.encode
-
