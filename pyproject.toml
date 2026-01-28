@@ -1,6 +1,6 @@
 [project]
 name = "embedding_deployment"
-version = "0.21.1"
+version = "0.21.2"
 description = "Benchmark for various options of deploying embedding models."
 requires-python = "==3.13.*"
 dependencies = [
@@ -24,7 +24,7 @@ llama-cpp = [
 onnx-build = [
     "onnx==1.20.*",
     "onnxruntime==1.23.*",
-    "transformers==4.57.*",
+    "transformers==5.0.*",
 ]
 onnx-runtime = [
     "onnxruntime==1.23.*",
