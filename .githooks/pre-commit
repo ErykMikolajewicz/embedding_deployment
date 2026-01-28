@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+ruff check .
+ruff format
+
+export PYTHONPATH=./benchmark:$PYTHONPATH
+python -m pytest benchmark/tests/unit
