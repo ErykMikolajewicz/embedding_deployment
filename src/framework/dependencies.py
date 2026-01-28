@@ -1,13 +1,11 @@
+
 from src.domain.types import EncodeTexts
 from src.infrastructure.enums import DecoderType
 from src.share.settings.app import AppSettings
 from src.share.settings.quantization import quantization_settings
 
-encoder = None
 
-
-def initialize_encoder():
-    global encoder
+def initialize_encoder() -> EncodeTexts:
     app_settings = AppSettings()
     match app_settings.DECODER_TYPE:
         case DecoderType.ONNX:
@@ -20,7 +18,5 @@ def initialize_encoder():
             encoder = SentenceTransformersEncoder(quantization_settings.QUANTIZATION)
         case _:
             raise Exception("Invalid encoder type!")
-
-
-def get_texts_encoder() -> EncodeTexts:
     return encoder.encode
+
