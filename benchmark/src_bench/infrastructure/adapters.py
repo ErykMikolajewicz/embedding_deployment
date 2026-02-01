@@ -1,22 +1,28 @@
 from collections.abc import Iterable
 
 import httpx
-from src_bench.domain.enums import FrameworkType
-from src_bench.domain.ports import DirectEmbeddingsAdapter, RestEmbeddingsAdapter
 
 from src.infrastructure.exceptions import AdapterNotSupported, InvalidConfigValue
+from src_bench.domain.enums import AdapterType, FrameworkType
+from src_bench.domain.ports import EmbeddingsAdapter
 
 
-def get_adapter_rest(framework_type: FrameworkType) -> type[RestEmbeddingsAdapter]:
-    match framework_type:
-        case FrameworkType.ONNX:
+def get_adapter(framework_type: FrameworkType, adapter_type: AdapterType) -> type[EmbeddingsAdapter]:
+    match framework_type, adapter_type:
+        case FrameworkType.ONNX, AdapterType.REST:
             return CustomRestAdapter
-        case FrameworkType.OLLAMA:
+        case FrameworkType.OLLAMA, AdapterType.REST:
             return OllamaAdapter
-        case FrameworkType.SENTENCE_TRANSFORMERS:
+        case FrameworkType.SENTENCE_TRANSFORMERS, AdapterType.REST:
             return CustomRestAdapter
+        case FrameworkType.ONNX, AdapterType.DIRECT:
+            return DirectOnnxAdapter
+        case FrameworkType.OLLAMA, AdapterType.DIRECT:
+            raise AdapterNotSupported("direct adapter", FrameworkType.OLLAMA)
+        case FrameworkType.SENTENCE_TRANSFORMERS, AdapterType.DIRECT:
+            return DirectSentenceTransformersAdapter
         case _:
-            raise InvalidConfigValue("adapter type", framework_type)
+            raise InvalidConfigValue("framework type, adapter type", f"{framework_type}, {adapter_type}")
 
 
 class CustomRestAdapter:
@@ -64,20 +70,8 @@ class OllamaAdapter:
         return embeddings
 
 
-def get_direct_adapter(framework_type: FrameworkType) -> DirectEmbeddingsAdapter:
-    match framework_type:
-        case FrameworkType.ONNX:
-            return DirectOnnxAdapter
-        case FrameworkType.OLLAMA:
-            raise AdapterNotSupported("direct adapter", FrameworkType.OLLAMA)
-        case FrameworkType.SENTENCE_TRANSFORMERS:
-            return DirectSentenceTransformersAdapter
-        case _:
-            raise InvalidConfigValue("adapter type", framework_type)
-
-
 class DirectOnnxAdapter:
-    def __init__(self, quantization: str):
+    def __init__(self, _: int, quantization: str):
         from src.infrastructure.adapters.onnx_encoding import OnnxEncoder
 
         self.__encoder = OnnxEncoder(quantization)
@@ -89,7 +83,7 @@ class DirectOnnxAdapter:
 
 
 class DirectSentenceTransformersAdapter:
-    def __init__(self, quantization: str):
+    def __init__(self, _: int, quantization: str):
         from src.infrastructure.adapters.sentence_transformers_encoding import SentenceTransformersEncoder
 
         self.__encoder = SentenceTransformersEncoder(quantization)

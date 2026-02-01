@@ -1,20 +1,13 @@
-from collections.abc import Iterable
 from typing import Protocol
 
 
-class RestEmbeddingsAdapter(Protocol):
+class EmbeddingsAdapter(Protocol):
     def __init__(self, port: int, quantization: str): ...
-
-    def get_embeddings(self, texts: Iterable[str]) -> list[list[float]]: ...
-
-
-class DirectEmbeddingsAdapter(Protocol):
-    def __init__(self, quantization: str): ...
 
     def get_embeddings(self, texts: list[str] | tuple[str, ...]) -> list[list[float]]: ...
 
 
-class ContainerInstantiate(Protocol):
+class EnvironmentPreparator(Protocol):
     def __init__(self, quantization: str): ...
 
     def __enter__(self): ...

@@ -1,23 +1,37 @@
 import subprocess
 
-from src_bench.consts import DEFAULT_HTTP_PORT
-from src_bench.domain.enums import FrameworkType
-from src_bench.domain.ports import ContainerInstantiate
 from testcontainers.core.container import DockerContainer
 from testcontainers.core.image import DockerImage
 from testcontainers.core.wait_strategies import HttpWaitStrategy
 
+from src_bench.consts import DEFAULT_HTTP_PORT
+from src_bench.domain.enums import AdapterType, FrameworkType
+from src_bench.domain.ports import EnvironmentPreparator
 
-def get_container_instantiate(framework_type: FrameworkType) -> ContainerInstantiate:
-    match framework_type:
-        case FrameworkType.ONNX:
+
+def get_environment_preparator(framework_type: FrameworkType, adapter_type: AdapterType) -> type[EnvironmentPreparator]:
+    match framework_type, adapter_type:
+        case FrameworkType.ONNX, AdapterType.REST:
             return OnnxContainerInstantiate
-        case FrameworkType.OLLAMA:
+        case FrameworkType.OLLAMA, AdapterType.REST:
             return OllamaContainerInstantiate
-        case FrameworkType.SENTENCE_TRANSFORMERS:
+        case FrameworkType.SENTENCE_TRANSFORMERS, AdapterType.REST:
             return SentenceTransformersContainerInstantiate
+        case _, AdapterType.DIRECT:
+            return EmptyPreparator
         case _:
             raise Exception("Invalid adapter type!")
+
+
+class EmptyPreparator:
+    def __init__(self, _: str):
+        pass
+
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
 
 class OnnxContainerInstantiate:
