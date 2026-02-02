@@ -1,7 +1,17 @@
 from typing import Protocol
 
 
-class EmbeddingsAdapter(Protocol):
+class MeasureFunction(Protocol):
+    def __call__(self, texts: list[str]) -> list[list[float]]: ...
+
+
+class DirectAdapter(Protocol):
+    def __init__(self, quantization: str): ...
+
+    def get_embeddings(self, texts: list[str] | tuple[str, ...]) -> list[list[float]]: ...
+
+
+class RestAdapter(Protocol):
     def __init__(self, port: int, quantization: str): ...
 
     def get_embeddings(self, texts: list[str] | tuple[str, ...]) -> list[list[float]]: ...

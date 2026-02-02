@@ -2,28 +2,6 @@ from collections.abc import Iterable
 
 import httpx
 
-from src.infrastructure.exceptions import AdapterNotSupported, InvalidConfigValue
-from src_bench.domain.enums import AdapterType, FrameworkType
-from src_bench.domain.ports import EmbeddingsAdapter
-
-
-def get_adapter(framework_type: FrameworkType, adapter_type: AdapterType) -> type[EmbeddingsAdapter]:
-    match framework_type, adapter_type:
-        case FrameworkType.ONNX, AdapterType.REST:
-            return CustomRestAdapter
-        case FrameworkType.OLLAMA, AdapterType.REST:
-            return OllamaAdapter
-        case FrameworkType.SENTENCE_TRANSFORMERS, AdapterType.REST:
-            return CustomRestAdapter
-        case FrameworkType.ONNX, AdapterType.DIRECT:
-            return DirectOnnxAdapter
-        case FrameworkType.OLLAMA, AdapterType.DIRECT:
-            raise AdapterNotSupported("direct adapter", FrameworkType.OLLAMA)
-        case FrameworkType.SENTENCE_TRANSFORMERS, AdapterType.DIRECT:
-            return DirectSentenceTransformersAdapter
-        case _:
-            raise InvalidConfigValue("framework type, adapter type", f"{framework_type}, {adapter_type}")
-
 
 class CustomRestAdapter:
     def __init__(self, port: int, _: str):
@@ -71,7 +49,7 @@ class OllamaAdapter:
 
 
 class DirectOnnxAdapter:
-    def __init__(self, _: int, quantization: str):
+    def __init__(self, quantization: str):
         from src.infrastructure.adapters.onnx_encoding import OnnxEncoder
 
         self.__encoder = OnnxEncoder(quantization)
@@ -83,7 +61,7 @@ class DirectOnnxAdapter:
 
 
 class DirectSentenceTransformersAdapter:
-    def __init__(self, _: int, quantization: str):
+    def __init__(self, quantization: str):
         from src.infrastructure.adapters.sentence_transformers_encoding import SentenceTransformersEncoder
 
         self.__encoder = SentenceTransformersEncoder(quantization)
