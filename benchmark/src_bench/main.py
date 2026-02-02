@@ -1,5 +1,3 @@
-import os
-
 from dishka import Scope
 
 from src_bench.config import get_benchmark_config
@@ -10,8 +8,6 @@ from src_bench.providers import container
 
 
 def run_benchmark() -> list[FrameworkResult]:
-    os.environ["ENVIRONMENT"] = "LOCAL"
-
     benchmark_config = get_benchmark_config()
 
     results = []

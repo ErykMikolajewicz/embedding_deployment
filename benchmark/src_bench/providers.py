@@ -1,11 +1,12 @@
+import os
 from collections.abc import Iterable, Sequence
 
-from dishka import Provider, Scope, from_context, make_container, provide
+from dishka import Provider, Scope, decorate, from_context, make_container, provide
 
 from src.infrastructure.exceptions import AdapterNotSupported
 from src_bench.config import BenchConfig, get_benchmark_config
 from src_bench.domain.enums import AdapterType, FrameworkType
-from src_bench.domain.ports import DirectAdapter, EnvironmentPreparator, MeasureFunction, RestAdapter
+from src_bench.domain.ports import DirectAdapter, MeasureFunction, RestAdapter
 from src_bench.domain.services.data import get_benchmark_data
 from src_bench.domain.services.measure import Measurer
 from src_bench.infrastructure.adapters import (
@@ -32,6 +33,7 @@ def get_direct_adapter_class(framework_type: FrameworkType) -> type[DirectAdapte
 
 
 def get_rest_adapter_class(framework_type: FrameworkType) -> type[RestAdapter]:
+    os.environ["ENVIRONMENT"] = "LOCAL"
     match framework_type:
         case FrameworkType.OLLAMA:
             return OllamaAdapter
@@ -39,16 +41,6 @@ def get_rest_adapter_class(framework_type: FrameworkType) -> type[RestAdapter]:
             return CustomRestAdapter
         case FrameworkType.SENTENCE_TRANSFORMERS:
             return CustomRestAdapter
-
-
-def get_container_instantiate(framework_type: FrameworkType) -> type[EnvironmentPreparator]:
-    match framework_type:
-        case FrameworkType.OLLAMA:
-            return OllamaContainerInstantiate
-        case FrameworkType.ONNX:
-            return OnnxContainerInstantiate
-        case FrameworkType.SENTENCE_TRANSFORMERS:
-            return SentenceTransformersContainerInstantiate
 
 
 class Config(Provider):
@@ -74,19 +66,38 @@ class Function(Provider):
     @provide(scope=Scope.SESSION)
     def measure_function(
         self, adapter_type: AdapterType, port: int, framework_type: FrameworkType, quantization: str
-    ) -> Iterable[MeasureFunction]:
+    ) -> MeasureFunction:
         match adapter_type:
             case AdapterType.DIRECT:
                 direct_adapter_class = get_direct_adapter_class(framework_type)
                 adapter = direct_adapter_class(quantization)
-                yield adapter.get_embeddings
             case AdapterType.REST:
                 rest_adapter_class = get_rest_adapter_class(framework_type)
                 adapter = rest_adapter_class(port, quantization)
+        return adapter.get_embeddings
 
-                container_instantiate = get_container_instantiate(framework_type)
-                with container_instantiate(port, quantization):
-                    yield adapter.get_embeddings
+    @decorate(scope=Scope.SESSION)
+    def instantiate_container(
+        self,
+        measure_function: MeasureFunction,
+        adapter_type: AdapterType,
+        port: int,
+        framework_type: FrameworkType,
+        quantization: str,
+    ) -> Iterable[MeasureFunction]:
+        if adapter_type == AdapterType.DIRECT:
+            yield measure_function
+        else:
+            match framework_type:
+                case FrameworkType.OLLAMA:
+                    container_instantiate = OllamaContainerInstantiate
+                case FrameworkType.ONNX:
+                    container_instantiate = OnnxContainerInstantiate
+                case FrameworkType.SENTENCE_TRANSFORMERS:
+                    container_instantiate = SentenceTransformersContainerInstantiate
+
+            with container_instantiate(port, quantization):
+                yield measure_function
 
 
 class Data(Provider):
