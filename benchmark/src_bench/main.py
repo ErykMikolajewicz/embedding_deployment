@@ -2,9 +2,9 @@ import os
 
 from dishka import Scope
 
+from src_bench.config import get_benchmark_config
 from src_bench.domain.enums import FrameworkType
 from src_bench.domain.models import FrameworkResult
-from src_bench.domain.services.general import get_benchmark_config
 from src_bench.domain.services.measure import Measurer
 from src_bench.providers import container
 

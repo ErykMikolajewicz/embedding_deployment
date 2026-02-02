@@ -1,12 +1,12 @@
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Sequence
 from datetime import datetime, timedelta
 from statistics import median
 
+from src_bench.domain.types import Embeddings
+
 
 class Measurer:
-    def __init__(
-        self, measure_number: int, benchmark_data: Sequence, function: Callable[[Iterable[str]], list[list[float]]]
-    ):
+    def __init__(self, measure_number: int, benchmark_data: Sequence, function: Callable[[Sequence[str]], Embeddings]):
         self.__measure_number = measure_number
         self.__benchmark_data = benchmark_data
         self.__function = function

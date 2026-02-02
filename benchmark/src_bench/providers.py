@@ -3,10 +3,10 @@ from typing import Iterable
 from dishka import Provider, Scope, from_context, make_container, provide
 
 from src.infrastructure.exceptions import AdapterNotSupported
+from src_bench.config import BenchConfig, get_benchmark_config
 from src_bench.domain.enums import AdapterType, FrameworkType
-from src_bench.domain.models import BenchConfig
 from src_bench.domain.ports import DirectAdapter, EnvironmentPreparator, MeasureFunction, RestAdapter
-from src_bench.domain.services.general import get_benchmark_config, get_benchmark_data
+from src_bench.domain.services.data import get_benchmark_data
 from src_bench.domain.services.measure import Measurer
 from src_bench.infrastructure.adapters import (
     CustomRestAdapter,
@@ -62,7 +62,7 @@ class Config(Provider):
 
     @provide(scope=Scope.APP)
     def port(self, config: BenchConfig) -> int:
-        return 8000
+        return config.rest_port
 
 
 class Function(Provider):
@@ -85,7 +85,7 @@ class Function(Provider):
                 adapter = rest_adapter_class(port, quantization)
 
                 container_instantiate = get_container_instantiate(framework_type)
-                with container_instantiate(quantization):
+                with container_instantiate(port, quantization):
                     yield adapter.get_embeddings
 
 

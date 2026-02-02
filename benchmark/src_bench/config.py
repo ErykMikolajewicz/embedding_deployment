@@ -1,9 +1,24 @@
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
 from src_bench.consts import CONFIG_FILE_NAME
-from src_bench.domain.models import BenchConfig, FrameworkBenchConfig
-from src_bench.domain.services.extraction import extract_articles, extract_text
+from src_bench.domain.enums import AdapterType, FrameworkType
+
+
+@dataclass
+class FrameworkBenchConfig:
+    framework: FrameworkType
+    batches_sizes: list[int]
+    quantization_types: list[str]
+
+
+@dataclass
+class BenchConfig:
+    measure_number: int
+    adapter_type: AdapterType
+    rest_port: int | None
+    frameworks_config: list[FrameworkBenchConfig]
 
 
 def get_benchmark_config() -> BenchConfig:
@@ -20,13 +35,3 @@ def get_benchmark_config() -> BenchConfig:
     benchmark_config = BenchConfig(**benchmark_config_json)
 
     return benchmark_config
-
-
-def get_benchmark_data():
-    act_path = Path("benchmark") / "data" / "kodeks_administracyjny.pdf"
-    act_text = extract_text(act_path)
-    articles = extract_articles(act_text)
-
-    articles = sorted(articles, key=len)
-
-    return tuple(articles)

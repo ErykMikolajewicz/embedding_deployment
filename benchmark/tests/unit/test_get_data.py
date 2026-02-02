@@ -1,4 +1,4 @@
-from src_bench.domain.services.general import get_benchmark_data
+from src_bench.domain.services.data import get_benchmark_data
 
 
 def test_get_benchmark_data():

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e pipefail
 
-ruff check .
+ruff check . --fix
 ruff format
 
 export PYTHONPATH=./benchmark:$PYTHONPATH

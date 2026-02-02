@@ -1,21 +1,8 @@
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Sequence
 from dataclasses import dataclass
 
-from src_bench.domain.enums import AdapterType, FrameworkType
-
-
-@dataclass
-class FrameworkBenchConfig:
-    framework: FrameworkType
-    batches_sizes: list[int]
-    quantization_types: list[str]
-
-
-@dataclass
-class BenchConfig:
-    measure_number: int
-    adapter_type: AdapterType
-    frameworks_config: list[FrameworkBenchConfig]
+from src_bench.domain.enums import FrameworkType
+from src_bench.domain.ports import MeasureFunction
 
 
 @dataclass
@@ -29,6 +16,6 @@ class FrameworkResult:
 @dataclass
 class BenchRunData:
     measure_number: int
-    measure_function: Callable[[Iterable[str]], list[list[float]]]
+    measure_function: MeasureFunction
     data: Sequence[str]
     batch_size: int

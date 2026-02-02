@@ -66,7 +66,7 @@ class DirectSentenceTransformersAdapter:
 
         self.__encoder = SentenceTransformersEncoder(quantization)
 
-    def get_embeddings(self, texts: list[str]) -> list[list[float]]:
+    def get_embeddings(self, texts: Iterable[str]) -> list[list[float]]:
         embeddings = self.__encoder.encode(texts)
 
         return embeddings
