@@ -1,4 +1,4 @@
-from typing import Iterable
+from collections.abc import Iterable, Sequence
 
 from dishka import Provider, Scope, from_context, make_container, provide
 
@@ -89,14 +89,20 @@ class Function(Provider):
                     yield adapter.get_embeddings
 
 
+class Data(Provider):
+    @provide(scope=Scope.APP)
+    def benchmark_data(self) -> Sequence[str]:
+        benchmark_data = get_benchmark_data()
+        return benchmark_data
+
+
 class MeasurerProvider(Provider):
     scope = Scope.SESSION
 
     @provide(scope=Scope.SESSION)
-    def measurer(self, config: BenchConfig, function: MeasureFunction) -> Measurer:
+    def measurer(self, config: BenchConfig, benchmark_data: Sequence[str], function: MeasureFunction) -> Measurer:
         measure_number = config.measure_number
-        benchmark_data = get_benchmark_data()
         return Measurer(measure_number, benchmark_data, function)
 
 
-container = make_container(Config(), Function(), MeasurerProvider())
+container = make_container(Config(), Data(), Function(), MeasurerProvider())
