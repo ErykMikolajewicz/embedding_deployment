@@ -33,7 +33,6 @@ def get_direct_adapter_class(framework_type: FrameworkType) -> type[DirectAdapte
 
 
 def get_rest_adapter_class(framework_type: FrameworkType) -> type[RestAdapter]:
-    os.environ["ENVIRONMENT"] = "LOCAL"
     match framework_type:
         case FrameworkType.OLLAMA:
             return OllamaAdapter
@@ -47,10 +46,6 @@ class Config(Provider):
     @provide(scope=Scope.APP)
     def config(self) -> BenchConfig:
         return get_benchmark_config()
-
-    @provide(scope=Scope.APP)
-    def adapter_type(self, config: BenchConfig) -> AdapterType:
-        return config.adapter_type
 
     @provide(scope=Scope.APP)
     def port(self, config: BenchConfig) -> int:
@@ -76,17 +71,21 @@ class Function(Provider):
                 adapter = rest_adapter_class(port, quantization)
         return adapter.get_embeddings
 
+    @provide(scope=Scope.APP)
+    def adapter_type(self, config: BenchConfig) -> AdapterType:
+        return config.adapter_type
+
     @decorate(scope=Scope.SESSION)
     def instantiate_container(
         self,
-        measure_function: MeasureFunction,
         adapter_type: AdapterType,
         port: int,
         framework_type: FrameworkType,
         quantization: str,
-    ) -> Iterable[MeasureFunction]:
+    ) -> Iterable[AdapterType]:
         if adapter_type == AdapterType.DIRECT:
-            yield measure_function
+            os.environ["ENVIRONMENT"] = "LOCAL"
+            yield adapter_type
         else:
             match framework_type:
                 case FrameworkType.OLLAMA:
@@ -97,7 +96,7 @@ class Function(Provider):
                     container_instantiate = SentenceTransformersContainerInstantiate
 
             with container_instantiate(port, quantization):
-                yield measure_function
+                yield adapter_type
 
 
 class Data(Provider):

@@ -1,6 +1,6 @@
 [project]
 name = "embedding_deployment"
-version = "0.24.2"
+version = "0.24.3"
 description = "Benchmark for various options of deploying embedding models."
 requires-python = "==3.13.*"
 dependencies = [
@@ -17,7 +17,7 @@ benchmark = [
     "pypdf==6.6.*",
 ]
 dev = [
-    "ruff==0.14.*",
+    "ruff==0.15.*",
 ]
 llama-cpp = [
     "llama-cpp-python==0.3.*",
