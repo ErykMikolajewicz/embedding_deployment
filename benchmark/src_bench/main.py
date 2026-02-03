@@ -1,5 +1,6 @@
 from dishka import Scope
 
+from src.domain.quantization import Quantization
 from src_bench.config import get_benchmark_config
 from src_bench.domain.enums import FrameworkType
 from src_bench.domain.models import FrameworkResult
@@ -15,11 +16,11 @@ def run_benchmark() -> list[FrameworkResult]:
         framework_type = framework_config.framework
         for quantization in framework_config.quantization_types:
             with container(
-                context={str: quantization, FrameworkType: framework_type}, scope=Scope.SESSION
+                context={Quantization: quantization, FrameworkType: framework_type}, scope=Scope.SESSION
             ) as session_container:
                 measurer = session_container.get(Measurer)
 
-                for batch_size in framework_config.batches_sizes:
+                for batch_size in framework_config.batch_sizes:
                     result = measurer.measure_median_time(batch_size)
 
                     framework_result = FrameworkResult(framework_type, batch_size, quantization, result)

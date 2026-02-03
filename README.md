@@ -35,7 +35,7 @@ Currently prepared:
   - **ONNX Runtime**;
   - **sentence transformers**;
   - The **llama-cpp** was also tried, but model gemma300m is currently not supported [GitHub issue](https://github.com/abetlen/llama-cpp-python/issues/2065);
-  - I tried **vLLM**, but support of than framework for CPU look rather poor;
+  - I tried **vLLM**, but support for CPU in that framework looks rather poor;
 
 The benchmark results are [here](docs/benchmark/results.md)
 

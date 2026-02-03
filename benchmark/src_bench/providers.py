@@ -3,6 +3,7 @@ from collections.abc import Iterable, Sequence
 
 from dishka import Provider, Scope, decorate, from_context, make_container, provide
 
+from src.domain.quantization import Quantization
 from src.infrastructure.exceptions import AdapterNotSupported
 from src_bench.config import BenchConfig, get_benchmark_config
 from src_bench.domain.enums import AdapterType, FrameworkType
@@ -56,7 +57,7 @@ class Function(Provider):
     scope = Scope.SESSION
 
     framework_type = from_context(provides=FrameworkType, scope=Scope.SESSION)
-    quantization = from_context(provides=str, scope=Scope.SESSION)
+    quantization = from_context(provides=Quantization, scope=Scope.SESSION)
 
     @provide(scope=Scope.SESSION)
     def measure_function(

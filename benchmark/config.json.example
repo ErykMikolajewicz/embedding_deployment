@@ -5,12 +5,12 @@
     [
       {
         "framework": "ONNX",
-        "batches_sizes": [5, 10, 20, 50],
+        "batch_sizes": [5, 10, 20, 50],
         "quantization_types": [null, "fp16", "int8", "int4"]
       },
       {
         "framework": "SENTENCE_TRANSFORMERS",
-        "batches_sizes": [5, 10, 20, 50],
+        "batch_sizes": [5, 10, 20, 50],
         "quantization_types": [null, "bf16"]
       }
     ]

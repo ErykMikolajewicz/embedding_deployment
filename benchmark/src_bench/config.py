@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from src.domain.quantization import Quantization
 from src_bench.consts import CONFIG_FILE_NAME
 from src_bench.domain.enums import AdapterType, FrameworkType
 
@@ -9,8 +10,8 @@ from src_bench.domain.enums import AdapterType, FrameworkType
 @dataclass
 class FrameworkBenchConfig:
     framework: FrameworkType
-    batches_sizes: list[int]
-    quantization_types: list[str]
+    batch_sizes: list[int]
+    quantization_types: list[Quantization]
 
 
 @dataclass
