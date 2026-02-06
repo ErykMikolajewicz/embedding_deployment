@@ -1,4 +1,4 @@
-from enum import StrEnum
+from enum import Enum, StrEnum
 
 
 class FrameworkType(StrEnum):
@@ -10,3 +10,11 @@ class FrameworkType(StrEnum):
 class AdapterType(StrEnum):
     DIRECT = "DIRECT"
     REST = "REST"
+
+
+class Quantization(Enum):
+    INT4 = "int4"
+    INT8 = "int8"
+    FP16 = "fp16"
+    BF16 = "bf16"
+    NONE = None

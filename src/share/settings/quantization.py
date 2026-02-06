@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.domain.quantization import Quantization
+from src.domain.enums import Quantization
 
 ENV_FILE = Path(".env")
 

@@ -1,8 +1,7 @@
 from dishka import Scope
 
-from src.domain.quantization import Quantization
 from src_bench.config import get_benchmark_config
-from src_bench.domain.enums import FrameworkType
+from src_bench.domain.enums import FrameworkType, Quantization
 from src_bench.domain.models import FrameworkResult
 from src_bench.domain.services.measure import Measurer
 from src_bench.providers import container
@@ -26,7 +25,6 @@ def run_benchmark() -> list[FrameworkResult]:
                     framework_result = FrameworkResult(framework_type, batch_size, quantization, result)
 
                     results.append(framework_result)
-
                     print(framework_result)
 
     return results

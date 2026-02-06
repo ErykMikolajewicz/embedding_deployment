@@ -2,9 +2,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from src.domain.quantization import Quantization
 from src_bench.consts import CONFIG_FILE_NAME
-from src_bench.domain.enums import AdapterType, FrameworkType
+from src_bench.domain.enums import AdapterType, FrameworkType, Quantization
 
 
 @dataclass

@@ -1,6 +1,6 @@
 from sentence_transformers import SentenceTransformer
 
-from src.domain.quantization import Quantization
+from src.domain.enums import Quantization
 from src.infrastructure.utils import get_model_root_path
 
 

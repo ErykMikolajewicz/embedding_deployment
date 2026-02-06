@@ -3,13 +3,13 @@ from collections.abc import Iterable, Sequence
 
 from dishka import Provider, Scope, decorate, from_context, make_container, provide
 
-from src.domain.quantization import Quantization
 from src.infrastructure.exceptions import AdapterNotSupported
 from src_bench.config import BenchConfig, get_benchmark_config
-from src_bench.domain.enums import AdapterType, FrameworkType
+from src_bench.domain.enums import AdapterType, FrameworkType, Quantization
 from src_bench.domain.ports import DirectAdapter, MeasureFunction, RestAdapter
 from src_bench.domain.services.data import get_benchmark_data
 from src_bench.domain.services.measure import Measurer
+from src_bench.domain.types import Port
 from src_bench.infrastructure.adapters import (
     CustomRestAdapter,
     DirectOnnxAdapter,
@@ -49,7 +49,7 @@ class Config(Provider):
         return get_benchmark_config()
 
     @provide(scope=Scope.APP)
-    def port(self, config: BenchConfig) -> int:
+    def port(self, config: BenchConfig) -> Port:
         return config.rest_port
 
 
@@ -61,7 +61,7 @@ class Function(Provider):
 
     @provide(scope=Scope.SESSION)
     def measure_function(
-        self, adapter_type: AdapterType, port: int, framework_type: FrameworkType, quantization: str
+        self, adapter_type: AdapterType, port: Port, framework_type: FrameworkType, quantization: Quantization
     ) -> MeasureFunction:
         match adapter_type:
             case AdapterType.DIRECT:
@@ -80,9 +80,9 @@ class Function(Provider):
     def instantiate_container(
         self,
         adapter_type: AdapterType,
-        port: int,
+        port: Port,
         framework_type: FrameworkType,
-        quantization: str,
+        quantization: Quantization,
     ) -> Iterable[AdapterType]:
         if adapter_type == AdapterType.DIRECT:
             os.environ["ENVIRONMENT"] = "LOCAL"
