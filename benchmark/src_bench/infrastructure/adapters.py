@@ -2,12 +2,12 @@ from collections.abc import Iterable
 
 import httpx
 
-from src_bench.domain.enums import Quantization
+from src.domain.enums import Quantization
 from src_bench.domain.types import Embeddings
 
 
 class CustomRestAdapter:
-    def __init__(self, port: int, _: Quantization):
+    def __init__(self, port: int, _: Quantization | None):
         self.__port = port
 
     def get_embeddings(self, texts: Iterable[str]) -> Embeddings:
@@ -30,7 +30,7 @@ class OllamaAdapter:
         "int4": "embeddinggemma:300m-qat-q4_0",
     }
 
-    def __init__(self, port: int, quantization: Quantization):
+    def __init__(self, port: int, quantization: Quantization | None):
         self.__port = port
         self.__model = OllamaAdapter.quantization_to_model[quantization]
 
@@ -52,7 +52,7 @@ class OllamaAdapter:
 
 
 class DirectOnnxAdapter:
-    def __init__(self, quantization: Quantization):
+    def __init__(self, quantization: Quantization | None):
         from src.infrastructure.adapters.onnx_encoding import OnnxEncoder
 
         self.__encoder = OnnxEncoder(quantization)
@@ -64,7 +64,7 @@ class DirectOnnxAdapter:
 
 
 class DirectSentenceTransformersAdapter:
-    def __init__(self, quantization: Quantization):
+    def __init__(self, quantization: Quantization | None):
         from src.infrastructure.adapters.sentence_transformers_encoding import SentenceTransformersEncoder
 
         self.__encoder = SentenceTransformersEncoder(quantization)

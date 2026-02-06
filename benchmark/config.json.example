@@ -1,6 +1,7 @@
 {
 "measure_number": 5,
 "adapter_type": "DIRECT",
+"rest_port":null,
 "frameworks_config":
     [
       {
